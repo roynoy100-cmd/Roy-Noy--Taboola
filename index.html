@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#0f2040">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>PunchList Pro</title>
+<link rel="manifest" href="manifest.json">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0a1628;--bg2:#0f2040;--bg3:#162a50;
+  --card:#1a3360;--card2:#1e3d70;
+  --bdr:rgba(100,160,255,0.18);--bdr2:rgba(100,160,255,0.35);
+  --acc:#3b82f6;--acc2:#60a5fa;
+  --txt:#e8f0fe;--txt2:#94a3b8;--txt3:#64748b;
+  --ok:#22c55e;--warn:#f59e0b;--err:#ef4444;
+  --pur:#8b5cf6;--org:#f97316;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:var(--bg);color:var(--txt);font-family:'Heebo',sans-serif;font-size:15px;overflow:hidden}
+#app{display:flex;flex-direction:column;height:100vh;height:100dvh}
+
+/* HEADER */
+.hdr{background:var(--bg2);border-bottom:1px solid var(--bdr);padding:10px 14px;display:flex;align-items:center;gap:10px;flex-shrink:0}
+.hlogo{width:34px;height:34px;background:var(--acc);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.htxt h1{font-size:16px;font-weight:800;line-height:1.2}
+.htxt span{font-size:11px;color:var(--txt2)}
+.hacts{display:flex;gap:6px;margin-right:auto}
+.ibtn{width:34px;height:34px;border:1px solid var(--bdr);background:var(--card);border-radius:9px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px;color:var(--txt2);flex-shrink:0}
+.ibtn:active{background:var(--card2);transform:scale(0.9)}
+
+/* CONTEXT BAR */
+.cbar{background:var(--bg2);border-bottom:2px solid var(--acc);padding:8px 12px 8px;flex-shrink:0}
+.clbl{font-size:10px;font-weight:700;color:var(--acc2);text-transform:uppercase;letter-spacing:0.4px;margin-bottom:6px;display:flex;justify-content:space-between}
+.cpills{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px}
+.cpill{display:inline-flex;align-items:center;gap:4px;background:var(--card);border:1.5px solid var(--bdr2);border-radius:20px;padding:5px 10px;font-size:12px;font-weight:700;color:var(--acc2);cursor:pointer;transition:all 0.15s;white-space:nowrap}
+.cpill:active{background:var(--card2)}
+.cpill.miss{border-color:var(--warn);color:var(--warn);animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.6}}
+.cpill.set{border-color:var(--acc);color:var(--acc2)}
+
+/* QUICK FORM */
+.qform{display:flex;flex-direction:column;gap:6px}
+.qrow{display:flex;gap:6px}
+.qi{flex:1;background:var(--bg3);border:1px solid var(--bdr);border-radius:8px;color:var(--txt);font-family:'Heebo',sans-serif;font-size:14px;padding:9px 11px;outline:none;direction:rtl;min-width:0;transition:border-color 0.2s}
+.qi:focus{border-color:var(--acc);box-shadow:0 0 0 2px rgba(59,130,246,0.2)}
+.qi::placeholder{color:var(--txt3)}
+.qs{background:var(--bg3);border:1px solid var(--bdr);border-radius:8px;color:var(--txt);font-family:'Heebo',sans-serif;font-size:13px;padding:9px 7px;outline:none;direction:rtl;min-width:80px;transition:border-color 0.2s}
+.qs:focus{border-color:var(--acc)}
+.qs option{background:var(--bg2)}
+.qbtn{background:var(--acc);border:none;border-radius:8px;color:#fff;font-family:'Heebo',sans-serif;font-size:16px;font-weight:800;padding:9px 18px;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.15s}
+.qbtn:active{transform:scale(0.93);opacity:0.9}
+.urow{display:flex;gap:4px;flex:1}
+.ub{flex:1;padding:7px 2px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;border:1.5px solid transparent;background:var(--bg3);color:var(--txt3);text-align:center;transition:all 0.15s}
+.ub.on{border-color:currentColor;background:rgba(255,255,255,0.05)}
+.ub:active{transform:scale(0.93)}
+.qpbtn{width:38px;height:38px;border-radius:7px;border:1.5px dashed var(--bdr2);background:transparent;color:var(--txt3);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.qpbtn:active{background:var(--card2);border-color:var(--acc)}
+.qpstrip{display:flex;gap:5px;margin-top:4px;flex-wrap:wrap;align-items:center}
+.qthumb{width:38px;height:38px;border-radius:5px;object-fit:cover;border:2px solid var(--bdr);cursor:pointer}
+
+/* TABS */
+.tabs{display:flex;background:var(--bg2);border-bottom:1px solid var(--bdr);flex-shrink:0}
+.tab{flex:1;padding:9px 4px;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;border-bottom:2px solid transparent;color:var(--txt3);font-size:10px;font-weight:700;transition:all 0.15s}
+.tab .ti{font-size:17px}
+.tab.on{color:var(--acc);border-bottom-color:var(--acc)}
+.tbadge{background:var(--err);color:#fff;font-size:9px;font-weight:700;border-radius:8px;padding:1px 5px}
+
+/* CONTENT */
+.content{flex:1;overflow-y:auto;overflow-x:hidden;padding:11px 11px 80px;-webkit-overflow-scrolling:touch}
+.content::-webkit-scrollbar{display:none}
+.page{display:none}
+.page.on{display:block}
+
+/* FILTER BAR */
+.fbar{display:flex;gap:6px;margin-bottom:11px;overflow-x:auto;padding-bottom:2px}
+.fbar::-webkit-scrollbar{display:none}
+.fc{padding:5px 12px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;border:1px solid var(--bdr);background:var(--card);color:var(--txt2);white-space:nowrap;transition:all 0.15s}
+.fc.on{background:var(--acc);border-color:var(--acc);color:#fff}
+
+/* SECTION HDR */
+.shdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.shdr h2{font-size:16px;font-weight:800}
+.cbadge{background:var(--card2);border:1px solid var(--bdr);border-radius:20px;padding:3px 10px;font-size:12px;font-weight:700;color:var(--txt2)}
+
+/* DEFECT CARD */
+.dcard{background:var(--card);border:1px solid var(--bdr);border-radius:13px;margin-bottom:10px;overflow:hidden;animation:si 0.25s ease}
+@keyframes si{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+.dcard:active{transform:scale(0.99)}
+.ch{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid var(--bdr);cursor:pointer}
+.cnum{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:var(--acc2);flex-shrink:0}
+.ctitle{flex:1;font-size:14px;font-weight:700;line-height:1.3}
+.udot{width:9px;height:9px;border-radius:50%;flex-shrink:0;box-shadow:0 0 5px currentColor}
+.cb{padding:9px 12px;cursor:pointer}
+.cloc{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--txt2);margin-bottom:7px;flex-wrap:wrap}
+.cmeta{display:flex;flex-wrap:wrap;gap:5px}
+.stbadge{padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700;display:inline-flex;align-items:center;gap:3px}
+.mtag{padding:3px 8px;border-radius:20px;font-size:11px;font-weight:600;background:rgba(255,255,255,0.06);border:1px solid var(--bdr);color:var(--txt2)}
+.cacts{display:flex;gap:5px;padding:8px 12px;border-top:1px solid var(--bdr)}
+.abtn{flex:1;padding:7px;border-radius:7px;font-size:12px;font-weight:700;border:1px solid var(--bdr);background:var(--bg3);color:var(--txt2);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:3px;transition:all 0.15s}
+.abtn:active{transform:scale(0.94)}
+.abtn.p{background:var(--acc);border-color:var(--acc);color:#fff}
+.tstrip{display:flex;gap:5px;padding:6px 12px;overflow-x:auto;border-top:1px solid var(--bdr)}
+.tstrip::-webkit-scrollbar{display:none}
+.thumb{width:52px;height:52px;border-radius:7px;object-fit:cover;border:2px solid var(--bdr);cursor:pointer;flex-shrink:0}
+
+/* DASHBOARD */
+.dgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:11px}
+.dc{background:var(--card);border:1px solid var(--bdr);border-radius:13px;padding:13px 12px;position:relative;overflow:hidden}
+.dc::before{content:'';position:absolute;top:0;right:0;width:3px;height:100%}
+.dc.r::before{background:var(--err)}.dc.o::before{background:var(--org)}
+.dc.y::before{background:var(--warn)}.dc.g::before{background:var(--ok)}
+.dc.p::before{background:var(--pur)}.dc.t::before{background:#14b8a6}
+.dclbl{font-size:11px;color:var(--txt2);margin-bottom:3px;font-weight:600}
+.dcnum{font-size:30px;font-weight:900;line-height:1;font-family:'JetBrains Mono',monospace}
+.dcico{position:absolute;top:10px;left:10px;font-size:20px;opacity:0.22}
+.dwide{background:var(--card);border:1px solid var(--bdr);border-radius:13px;padding:13px;margin-bottom:9px}
+.dwide h3{font-size:13px;font-weight:700;margin-bottom:11px;color:var(--txt2)}
+.prow{display:flex;align-items:center;gap:7px;margin-bottom:7px}
+.plbl{font-size:11px;font-weight:600;min-width:52px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ptrack{flex:1;height:5px;background:var(--bg3);border-radius:3px;overflow:hidden}
+.pfill{height:100%;border-radius:3px;transition:width 0.5s}
+.pcnt{font-size:11px;color:var(--txt3);min-width:18px;text-align:left}
+
+/* EMPTY */
+.empty{text-align:center;padding:48px 20px;color:var(--txt3)}
+.empty .ei{font-size:44px;margin-bottom:10px;opacity:0.45}
+.empty h3{font-size:15px;font-weight:700;color:var(--txt2);margin-bottom:5px}
+.empty p{font-size:13px;line-height:1.5}
+
+/* OVERLAY — fixed, high z, flex column from bottom */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.78);z-index:9999;display:none;align-items:flex-end;justify-content:center}
+.overlay.open{display:flex}
+.modal{background:var(--bg2);border:1px solid var(--bdr);border-top-left-radius:16px;border-top-right-radius:16px;width:100%;max-width:600px;max-height:88vh;overflow-y:auto;padding-bottom:max(env(safe-area-inset-bottom),16px)}
+.modal::-webkit-scrollbar{width:3px}
+.modal::-webkit-scrollbar-thumb{background:var(--bdr2);border-radius:2px}
+.mhandle{width:38px;height:4px;border-radius:2px;background:var(--bdr2);margin:10px auto 0}
+.mhdr{display:flex;align-items:center;justify-content:space-between;padding:13px 16px 11px;border-bottom:1px solid var(--bdr)}
+.mhdr h2{font-size:16px;font-weight:800}
+.mclose{width:30px;height:30px;border-radius:8px;background:var(--card);border:1px solid var(--bdr);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:17px;color:var(--txt2)}
+.mclose:active{background:var(--card2)}
+.mbody{padding:14px}
+
+/* FORM */
+.fsec{background:var(--card);border:1px solid var(--bdr);border-radius:10px;margin-bottom:10px;overflow:hidden}
+.fst{font-size:10px;font-weight:700;color:var(--acc2);text-transform:uppercase;letter-spacing:0.5px;padding:7px 12px;background:rgba(59,130,246,0.09);border-bottom:1px solid var(--bdr)}
+.fg{padding:9px 12px;border-bottom:1px solid var(--bdr)}
+.fg:last-child{border-bottom:none}
+.flbl{font-size:11px;font-weight:700;color:var(--txt2);margin-bottom:5px;display:block}
+.req{color:var(--err)}
+.fi,.fsel,.fta{width:100%;background:var(--bg3);border:1px solid var(--bdr);border-radius:8px;color:var(--txt);font-family:'Heebo',sans-serif;font-size:14px;padding:9px 11px;outline:none;direction:rtl;transition:border-color 0.2s}
+.fi:focus,.fsel:focus,.fta:focus{border-color:var(--acc);box-shadow:0 0 0 2px rgba(59,130,246,0.2)}
+.fta{resize:vertical;min-height:68px}
+.fsel option{background:var(--bg2)}
+.fgrid{display:grid;grid-template-columns:1fr 1fr}
+.fgrid .fg:nth-child(odd){border-left:1px solid var(--bdr)}
+.sbtn{width:100%;background:linear-gradient(135deg,var(--acc),#2563eb);color:#fff;border:none;border-radius:9px;padding:14px;font-family:'Heebo',sans-serif;font-size:16px;font-weight:800;cursor:pointer;margin-top:4px;box-shadow:0 4px 14px rgba(59,130,246,0.35)}
+.sbtn:active{transform:scale(0.98);opacity:0.9}
+.sbtn.ghost{background:var(--card);color:var(--txt);box-shadow:none;border:1px solid var(--bdr)}
+
+/* PHOTO AREA */
+.pharea{padding:10px;display:flex;gap:7px;flex-wrap:wrap}
+.phprev{position:relative;width:68px;height:68px}
+.phprev img{width:100%;height:100%;object-fit:cover;border-radius:7px;border:2px solid var(--bdr)}
+.phrm{position:absolute;top:-5px;right:-5px;width:19px;height:19px;border-radius:50%;background:var(--err);color:#fff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
+.phadd{width:68px;height:68px;border:2px dashed var(--bdr2);border-radius:7px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;color:var(--txt3);font-size:22px;transition:all 0.15s}
+.phadd span{font-size:10px;font-weight:600}
+.phadd:active{background:var(--card2);border-color:var(--acc)}
+
+/* STATUS GRID */
+.stgrid{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:11px}
+.stopt{padding:10px 7px;border-radius:8px;border:2px solid transparent;cursor:pointer;font-size:11px;font-weight:700;text-align:center;transition:all 0.15s;background:var(--bg3)}
+.stopt.on{border-color:currentColor}
+.stopt:active{transform:scale(0.95)}
+
+/* AREA / PROJECT CHIPS */
+.chips{display:flex;gap:5px;flex-wrap:wrap}
+.chip{padding:6px 12px;border-radius:20px;border:1px solid var(--bdr);background:var(--card);color:var(--txt2);font-family:'Heebo',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s}
+.chip.on{background:var(--acc);border-color:var(--acc);color:#fff}
+.chip:active{transform:scale(0.94)}
+
+/* SUMMARY BOX */
+.sumbox{background:rgba(59,130,246,0.12);border:1.5px solid rgba(59,130,246,0.4);border-radius:10px;padding:11px 13px;margin-bottom:11px;display:none}
+.sumlbl{font-size:10px;color:var(--acc2);font-weight:700;text-transform:uppercase;letter-spacing:0.4px;margin-bottom:3px}
+.sumval{font-size:15px;font-weight:800;color:var(--txt)}
+
+/* TOAST */
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(10px);border-radius:22px;padding:9px 18px;font-size:13px;font-weight:700;z-index:99999;opacity:0;pointer-events:none;transition:all 0.25s;white-space:nowrap;box-shadow:0 3px 14px rgba(0,0,0,0.35)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* OFFLINE */
+.offbanner{background:var(--warn);color:#000;font-size:12px;font-weight:700;text-align:center;padding:5px;display:none;flex-shrink:0}
+.offbanner.show{display:block}
+
+/* LIGHTBOX */
+.lbox{position:fixed;inset:0;background:rgba(0,0,0,0.96);z-index:99998;display:none;align-items:center;justify-content:center}
+.lbox.open{display:flex}
+.lbox img{max-width:100%;max-height:90vh;border-radius:8px}
+.lbclose{position:absolute;top:14px;right:14px;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.15);border:none;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+
+/* DETAIL */
+.dfield{display:flex;justify-content:space-between;align-items:flex-start;padding:9px 14px;border-bottom:1px solid var(--bdr)}
+.dfield:last-child{border-bottom:none}
+.dflbl{font-size:12px;color:var(--txt2);font-weight:600}
+.dfval{font-size:13px;font-weight:700;text-align:left;max-width:58%}
+
+/* SETTINGS */
+.si{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--bdr)}
+.si:last-child{border-bottom:none}
+.sil{display:flex;align-items:center;gap:9px}
+.siico{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.silbl{font-size:14px;font-weight:600}
+.sidesc{font-size:11px;color:var(--txt3);margin-top:1px}
+
+/* AUTOCOMPLETE */
+.ac-wrap{position:relative;flex:1}
+.ac-list{position:absolute;top:100%;right:0;left:0;background:var(--card2);border:1px solid var(--bdr2);border-radius:8px;z-index:100;max-height:180px;overflow-y:auto;margin-top:2px;box-shadow:0 4px 16px rgba(0,0,0,0.4)}
+.ac-item{padding:10px 12px;font-size:13px;cursor:pointer;border-bottom:1px solid var(--bdr);color:var(--txt)}
+.ac-item:last-child{border-bottom:none}
+.ac-item:active,.ac-item:hover{background:var(--card);color:var(--acc2)}
+.ac-item mark{background:transparent;color:var(--acc2);font-weight:800}
+
+/* LIGHT THEME */
+body.light {
+  --bg:#f0f4f8;--bg2:#ffffff;--bg3:#e2e8f0;
+  --card:#ffffff;--card2:#f8fafc;
+  --bdr:rgba(0,0,0,0.12);--bdr2:rgba(0,0,0,0.22);
+  --acc:#1d4ed8;--acc2:#1e40af;
+  --txt:#0f172a;--txt2:#1e293b;--txt3:#475569;
+  --ok:#15803d;--warn:#b45309;--err:#b91c1c;
+  --pur:#6d28d9;--org:#c2410c;
+}
+/* כל הטקסטים כהים במצב בהיר */
+body.light,
+body.light h1,body.light h2,body.light h3,
+body.light p,body.light span,body.light div,
+body.light label,body.light button {color:#0f172a}
+body.light .hdr{background:#1e40af;border-bottom:1px solid #1d4ed8}
+body.light .hdr h1,body.light .hdr span,body.light .hdr .htxt *{color:#ffffff!important}
+body.light .hdr .ibtn{background:rgba(255,255,255,0.2);border-color:rgba(255,255,255,0.3);color:#ffffff}
+body.light .cbar{background:#dbeafe;border-bottom:2px solid #1d4ed8}
+body.light .cbar *{color:#1e3a8a!important}
+body.light .cpill{background:#bfdbfe;border-color:#93c5fd;color:#1e3a8a!important}
+body.light .cpill.set{background:#1d4ed8;color:#ffffff!important;border-color:#1d4ed8}
+body.light .cpill.miss{background:#fef3c7;border-color:#f59e0b;color:#92400e!important}
+body.light .qi{background:#ffffff;color:#0f172a!important;border-color:#cbd5e1}
+body.light .qi::placeholder{color:#94a3b8}
+body.light .qs{background:#ffffff;color:#0f172a!important;border-color:#cbd5e1}
+body.light .qs option{background:#ffffff;color:#0f172a}
+body.light .qbtn{background:#1d4ed8;color:#ffffff!important}
+body.light .ub{background:#e2e8f0;color:#475569!important;border-color:transparent}
+body.light .ub.on{color:#1d4ed8!important;border-color:#1d4ed8;background:#dbeafe}
+body.light .qpbtn{border-color:#cbd5e1;color:#475569!important}
+body.light .tabs{background:#ffffff;border-bottom:1px solid #e2e8f0}
+body.light .tab{color:#64748b!important}
+body.light .tab.on{color:#1d4ed8!important;border-bottom-color:#1d4ed8}
+body.light .tbadge{background:#dc2626;color:#ffffff!important}
+body.light .content{background:#f0f4f8}
+body.light .dcard{background:#ffffff;border-color:#e2e8f0;box-shadow:0 2px 6px rgba(0,0,0,0.08)}
+body.light .ch *,body.light .cb *{color:#0f172a!important}
+body.light .cloc{color:#475569!important}
+body.light .cloc *{color:#475569!important}
+body.light .cnum{color:#1d4ed8!important}
+body.light .ctitle{color:#0f172a!important}
+body.light .mtag{background:#f1f5f9;border-color:#e2e8f0;color:#334155!important}
+body.light .abtn{background:#f1f5f9;border-color:#e2e8f0;color:#334155!important}
+body.light .abtn.p{background:#1d4ed8!important;color:#ffffff!important;border-color:#1d4ed8}
+body.light .shdr h2{color:#0f172a!important}
+body.light .cbadge{background:#e2e8f0;color:#334155!important}
+body.light .fbar .fc{background:#ffffff;border-color:#e2e8f0;color:#475569!important}
+body.light .fbar .fc.on{background:#1d4ed8;color:#ffffff!important;border-color:#1d4ed8}
+body.light .empty h3{color:#334155!important}
+body.light .empty p{color:#64748b!important}
+body.light .fsec{background:#ffffff;border-color:#e2e8f0}
+body.light .fst{background:#eff6ff;color:#1d4ed8!important;border-bottom-color:#dbeafe}
+body.light .fg{border-bottom-color:#f1f5f9}
+body.light .flbl{color:#334155!important}
+body.light .fi,.light .fsel,.light .fta{background:#f8fafc!important;color:#0f172a!important;border-color:#cbd5e1!important}
+body.light .fi:focus,.light .fsel:focus,.light .fta:focus{border-color:#1d4ed8!important}
+body.light .sbtn{background:linear-gradient(135deg,#1d4ed8,#1e40af)!important;color:#ffffff!important}
+body.light .sbtn.ghost{background:#f1f5f9!important;color:#334155!important;border-color:#e2e8f0!important}
+body.light .modal{background:#ffffff!important}
+body.light .mhdr{border-bottom-color:#e2e8f0}
+body.light .mhdr h2{color:#0f172a!important}
+body.light .mclose{background:#f1f5f9;border-color:#e2e8f0;color:#475569!important}
+body.light .overlay{background:rgba(0,0,0,0.55)}
+body.light .stopt{background:#f1f5f9!important;color:#334155!important}
+body.light .areabtn,.light .chip{background:#f1f5f9;color:#334155!important;border-color:#e2e8f0}
+body.light .areabtn.on,.light .chip.on{background:#1d4ed8!important;color:#ffffff!important}
+body.light .sumbox{background:#eff6ff;border-color:#bfdbfe}
+body.light .sumlbl{color:#1d4ed8!important}
+body.light .sumval{color:#0f172a!important}
+body.light .ac-list{background:#ffffff;border-color:#e2e8f0;box-shadow:0 4px 12px rgba(0,0,0,0.1)}
+body.light .ac-item{color:#0f172a!important;border-bottom-color:#f1f5f9}
+body.light .ac-item:hover{background:#eff6ff}
+body.light .dc{background:#ffffff;border-color:#e2e8f0;box-shadow:0 2px 6px rgba(0,0,0,0.06)}
+body.light .dclbl{color:#475569!important}
+body.light .dcnum{color:#0f172a!important}
+body.light .dwide{background:#ffffff;border-color:#e2e8f0;box-shadow:0 2px 6px rgba(0,0,0,0.06)}
+body.light .dwide h3{color:#334155!important}
+body.light .ptrack{background:#e2e8f0}
+body.light .si{border-bottom-color:#f1f5f9}
+body.light .silbl{color:#0f172a!important}
+body.light .sidesc{color:#64748b!important}
+body.light .dfield{border-bottom-color:#f1f5f9}
+body.light .dflbl{color:#475569!important}
+body.light .dfval{color:#0f172a!important}
+body.light .lbox{background:rgba(0,0,0,0.92)}
+
+/* טקסט לבן על רקע כחול במצב בהיר */
+body.light .cpill.set,
+body.light .cpill.set *{color:#ffffff!important}
+body.light .fbar .fc.on,
+body.light .fbar .fc.on *{color:#ffffff!important}
+body.light .abtn.p,
+body.light .abtn.p *{color:#ffffff!important}
+body.light .sbtn,
+body.light .sbtn *{color:#ffffff!important}
+body.light .qbtn,
+body.light .qbtn *{color:#ffffff!important}
+body.light .tab.on{color:#1d4ed8!important}
+body.light .tbadge{color:#ffffff!important}
+body.light .stbadge{font-weight:800!important}
+body.light .hdr *{color:#ffffff!important}
+body.light .hdr h1{color:#ffffff!important;font-weight:900!important}
+body.light .hdr span{color:#e0e7ff!important}
+body.light #syncStatus{color:#86efac!important}
+body.light .ub.on{color:#1d4ed8!important;font-weight:800!important}
+body.light .chip.on *,
+body.light .areabtn.on *{color:#ffffff!important}
+body.light .ctx-pill.set *{color:#ffffff!important}
+body.light .sumbox .sumlbl{color:#1d4ed8!important;font-weight:800!important}
+body.light .sumbox .sumval{color:#0f172a!important;font-weight:900!important}
+/* כותרות sections */
+body.light .fst{color:#1d4ed8!important;font-weight:800!important;background:#dbeafe!important}
+/* כפתור + גדול */
+body.light .qbtn{background:#1d4ed8!important;color:#ffffff!important;font-weight:900!important;font-size:20px!important}
+/* status badges - טקסט כהה על רקע בהיר */
+body.light .stbadge[style*="rgba(34,197,94"]{color:#14532d!important}
+body.light .stbadge[style*="rgba(239,68,68"]{color:#7f1d1d!important}
+body.light .stbadge[style*="rgba(245,158,11"]{color:#78350f!important}
+body.light .stbadge[style*="rgba(249,115,22"]{color:#7c2d12!important}
+body.light .stbadge[style*="rgba(139,92,246"]{color:#3b0764!important}
+body.light .stbadge[style*="rgba(236,72,153"]{color:#500724!important}
+body.light .stbadge[style*="rgba(20,184,166"]{color:#042f2e!important}
+/* context pills */
+body.light .cpill{font-weight:700!important}
+body.light .cpill.miss{color:#92400e!important;font-weight:800!important}
+/* filter chips */
+body.light .fc{font-weight:700!important}
+/* card numbers */
+body.light .cnum{color:#1d4ed8!important;font-weight:900!important}
+/* urgency dot label */
+body.light .udot{box-shadow:0 0 6px currentColor!important}
+
+body.light #syncStatus{color:#15803d!important}
+
+</style>
+
+<script type="module">
+// ── FIREBASE CONFIG ──────────────────────────────
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+import { getDatabase, ref, set, onValue, remove, push, update } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCCE97KG3rUzvT3dYKuRPk0Fxdaaz-L4Gg",
+  authDomain: "taboola--31-33.firebaseapp.com",
+  projectId: "taboola--31-33",
+  storageBucket: "taboola--31-33.firebasestorage.app",
+  messagingSenderId: "743517864272",
+  appId: "1:743517864272:web:46eefb75bcd77cb52f6c55",
+  databaseURL: "https://taboola--31-33-default-rtdb.europe-west1.firebasedatabase.app"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+// ── FIREBASE SYNC ────────────────────────────────
+window.FB = {
+  // Save all defects to Firebase
+  saveDefects: function(defects) {
+    set(ref(db, 'defects'), defects).catch(e => console.error('Firebase save error:', e));
+  },
+  // Load defects from Firebase (realtime)
+  listenDefects: function(callback) {
+    onValue(ref(db, 'defects'), (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        // Save to localStorage as backup
+        localStorage.setItem('pl_d', JSON.stringify(data));
+        callback(data);
+      }
+    });
+  },
+  // Save context
+  saveCtx: function(ctx, userId) {
+    set(ref(db, 'contexts/' + userId), ctx).catch(e => console.error(e));
+  }
+};
+
+// Start listening when page loads
+window.addEventListener('DOMContentLoaded', function() {
+  setTimeout(function() {
+    window.FB.listenDefects(function(defects) {
+      // Update localStorage
+      localStorage.setItem('pl_d', JSON.stringify(defects));
+      // Re-render if app is loaded
+      if (typeof renderList === 'function') {
+        renderList();
+        updateCtxBar();
+        if (typeof renderDash === 'function' && 
+            document.getElementById('page-dash').classList.contains('on')) {
+          renderDash();
+        }
+      }
+    });
+  }, 500);
+});
+</script>
+</head>
+<body>
+<div id="app">
+<div class="offbanner" id="offBanner">⚡ מצב אופליין — שינויים יסתנכרנו בחזרה לרשת</div>
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="hlogo">🏗️</div>
+  <div class="htxt"><h1>PunchList Pro</h1><span>מערכת ניהול ליקויים <span id="syncStatus" style="font-size:10px;color:#22c55e">● מחובר</span></span></div>
+  <div class="hacts"><div class="ibtn" onclick="showTab('settings')">⚙️</div></div>
+</div>
+
+<!-- CONTEXT BAR -->
+<div class="cbar">
+  <div class="clbl">
+    <span>⚡ קונטקסט סיור — לחץ לשינוי</span>
+    <span id="openCnt" style="font-size:11px;color:var(--txt3);font-weight:400"></span>
+  </div>
+  <div class="cpills">
+    <div class="cpill miss" id="cp-proj" onclick="openCtxModal()">🏢 <span id="cpPrj">הגדר פרויקט</span></div>
+    <div class="cpill miss" id="cp-floor" onclick="openCtxModal()">🏛️ <span id="cpFlr">הגדר קומה</span></div>
+    <div class="cpill" id="cp-area" onclick="openCtxModal()">📍 <span id="cpArea">אזור</span></div>
+  </div>
+  <div class="qform">
+    <div class="qrow">
+      <div class="ac-wrap"><input class="qi" id="qRoom" placeholder="חדר / מיקום (חובה)" oninput="showAc(this,'room')" onblur="hideAc('room')" autocomplete="off"><div class="ac-list" id="ac-room" style="display:none"></div></div>
+      <div class="ac-wrap" style="max-width:130px"><input class="qi" id="qCat" placeholder="קטגוריה" oninput="showAc(this,'cat')" onblur="hideAc('cat')" autocomplete="off"><div class="ac-list" id="ac-cat" style="display:none"></div></div>
+    </div>
+    <div class="qrow">
+      <div class="ac-wrap"><input class="qi" id="qDesc" placeholder="תיאור הליקוי... (חובה)" oninput="showAc(this,'desc')" onblur="hideAc('desc')" autocomplete="off"><div class="ac-list" id="ac-desc" style="display:none"></div></div>
+      <button class="qbtn" onclick="quickSave()">＋</button>
+    </div>
+    <div class="qrow" style="align-items:center">
+      <div class="urow">
+        <div class="ub" style="color:#22c55e" onclick="setUrg('נמוך',this)">נמוך</div>
+        <div class="ub on" style="color:#3b82f6" onclick="setUrg('רגיל',this)">רגיל</div>
+        <div class="ub" style="color:#f97316" onclick="setUrg('דחוף',this)">דחוף</div>
+        <div class="ub" style="color:#ef4444" onclick="setUrg('קריטי',this)">קריטי</div>
+      </div>
+      <button class="qpbtn" onclick="openPhotoMenu('quick')" title="הוסף תמונה">📷</button>
+    </div>
+    <div class="qpstrip" id="qStrip"></div>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <div class="tab on" id="tab-list" onclick="showTab('list')"><span class="ti">📋</span>ליקויים<span class="tbadge" id="tbadge">0</span></div>
+  <div class="tab" id="tab-dash" onclick="showTab('dash')"><span class="ti">📊</span>דשבורד</div>
+  <div class="tab" id="tab-settings" onclick="showTab('settings')"><span class="ti">⚙️</span>הגדרות</div>
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+  <div class="page on" id="page-list">
+    <div class="fbar">
+      <div class="fc on" onclick="setFilter('all',this)">הכל</div>
+      <div class="fc" onclick="setFilter('חדש',this)">חדש</div>
+      <div class="fc" onclick="setFilter('בטיפול',this)">בטיפול</div>
+      <div class="fc" onclick="setFilter('בוצע חלקית',this)">חלקי</div>
+      <div class="fc" onclick="setFilter('בוצע ע\"י קבלן',this)">לבדיקה</div>
+      <div class="fc" onclick="setFilter('אושר / נסגר',this)">סגור</div>
+    </div>
+    <div class="shdr"><h2>ליקויים</h2><span class="cbadge" id="listCnt">0</span></div>
+    <div id="listWrap"></div>
+  </div>
+  <div class="page" id="page-dash">
+    <div class="shdr"><h2>דשבורד</h2></div>
+    <div class="dgrid" id="dgrid"></div>
+    <div class="dwide"><h3>📊 התפלגות סטטוסים</h3><div id="pbars"></div></div>
+    <div class="dwide"><h3>⚠️ עבר תאריך יעד</h3><div id="overdueWrap"></div></div>
+  </div>
+  <div class="page" id="page-settings">
+    <div class="shdr"><h2>הגדרות</h2></div>
+    <div class="fsec" style="margin-bottom:10px">
+      <div class="fst">👷 קבלן ראשי</div>
+      <div class="si">
+        <div class="sil" style="flex:1">
+          <div class="siico" style="background:rgba(249,115,22,0.15)">👷</div>
+          <input class="qi" id="contractorInput" placeholder="שם הקבלן הראשי..." 
+            style="flex:1;background:transparent;border:none;font-size:14px;font-weight:600;outline:none;color:var(--txt);direction:rtl"
+            oninput="S.mainContractor=this.value;localStorage.setItem('pl_contractor',this.value)"
+            value="">
+        </div>
+      </div>
+    </div>
+    <div class="fsec" style="margin-bottom:10px">
+      <div class="fst">🔗 שיתוף גישה</div>
+      <div class="si" style="cursor:pointer" onclick="copyLink('contractor')"><div class="sil"><div class="siico" style="background:rgba(249,115,22,0.15)">👷</div><div><div class="silbl">קישור לקבלן</div><div class="sidesc">עדכון סטטוס ותמונות</div></div></div><span>📋</span></div>
+      <div class="si" style="cursor:pointer" onclick="copyLink('viewer')"><div class="sil"><div class="siico" style="background:rgba(100,116,139,0.15)">👁️</div><div><div class="silbl">קישור לצפייה</div><div class="sidesc">בעל נכס / מזמין</div></div></div><span>📋</span></div>
+    </div>
+    <div class="fsec" style="margin-bottom:10px">
+      <div class="fst">📤 שליחת דוח</div>
+      <div class="si" style="cursor:pointer" onclick="sendReport('whatsapp')"><div class="sil"><div class="siico" style="background:rgba(37,211,102,0.15)">💬</div><div><div class="silbl">שלח לוואטסאפ</div><div class="sidesc">דוח טקסטואלי לקבלן</div></div></div><span>›</span></div>
+      <div class="si" style="cursor:pointer" onclick="sendReport('email')"><div class="sil"><div class="siico" style="background:rgba(59,130,246,0.15)">✉️</div><div><div class="silbl">שלח במייל</div><div class="sidesc">דוח מפורט עם כל הפרטים</div></div></div><span>›</span></div>
+      <div class="si" style="cursor:pointer" onclick="sendReport('share')"><div class="sil"><div class="siico" style="background:rgba(139,92,246,0.15)">↗️</div><div><div class="silbl">שתף (כל אפליקציה)</div><div class="sidesc">פתח חלון שיתוף של הנייד</div></div></div><span>›</span></div>
+    </div>
+    <div class="fsec">
+      <div class="fst">🎨 תצוגה</div>
+      <div class="si">
+        <div class="sil">
+          <div class="siico" style="background:rgba(59,130,246,0.15)" id="themeIcon">🌙</div>
+          <div>
+            <div class="silbl" id="themeLabel">מסך כהה</div>
+            <div class="sidesc">לחץ להחלפה</div>
+          </div>
+        </div>
+        <div id="themeToggle" onclick="toggleTheme()" style="width:52px;height:28px;border-radius:14px;background:var(--acc);position:relative;cursor:pointer;transition:background 0.2s;flex-shrink:0">
+          <div id="themeThumb" style="position:absolute;width:22px;height:22px;border-radius:50%;background:#fff;top:3px;right:3px;transition:transform 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.3)"></div>
+        </div>
+      </div>
+    </div>
+    <div class="fsec" style="margin-bottom:10px">
+      <div class="fst">📊 נתונים וייצוא</div>
+      <div class="si" style="cursor:pointer" onclick="exportCSV()"><div class="sil"><div class="siico" style="background:rgba(59,130,246,0.15)">📊</div><div><div class="silbl">ייצוא CSV / Excel</div><div class="sidesc" id="storSz">—</div></div></div><span>›</span></div>
+      <div class="si" style="cursor:pointer" onclick="window.location.href='import.html'"><div class="sil"><div class="siico" style="background:rgba(34,197,94,0.15)">📥</div><div><div class="silbl">ייבוא מדוחות קודמים</div><div class="sidesc">PDF / קומות קודמות</div></div></div><span>›</span></div>
+      <div class="si" style="cursor:pointer" onclick="clearAll()"><div class="sil"><div class="siico" style="background:rgba(239,68,68,0.15)">🗑️</div><div><div class="silbl" style="color:var(--err)">מחק הכל</div><div class="sidesc">איפוס מלא</div></div></div></div>
+    </div>
+  </div>
+</div>
+</div><!-- /app -->
+
+<div class="toast" id="toast"></div>
+<div class="lbox" id="lbox" onclick="closeLB()"><button class="lbclose" onclick="closeLB()">✕</button><img id="lbImg" src="" alt=""></div>
+
+<!-- ═══ CONTEXT MODAL ═══ -->
+<div class="overlay" id="ctxModal">
+  <div class="modal">
+    <div class="mhandle"></div>
+    <div class="mhdr"><h2>📍 הגדרת סיור</h2><div class="mclose" onclick="closeOv('ctxModal')">✕</div></div>
+    <div class="mbody">
+      <p style="font-size:13px;color:var(--txt2);margin-bottom:14px;line-height:1.6">הגדר פרויקט וקומה — יישמרו לכל ליקוי חדש בסיור</p>
+
+      <div class="fsec" style="margin-bottom:10px">
+        <div class="fst">🏢 שם פרויקט</div>
+        <div class="fg">
+          <label class="flbl">הקלד שם פרויקט <span class="req">*</span></label>
+          <input class="fi" id="ctxProj" placeholder="לדוגמה: משרדי טבולה, בניין A..." style="font-size:15px;font-weight:700" oninput="updateSum()">
+        </div>
+        <div class="fg" id="savedProjsWrap">
+          <label class="flbl">פרויקטים שמורים:</label>
+          <div class="chips" id="savedProjs"></div>
+        </div>
+      </div>
+
+      <div class="fsec" style="margin-bottom:10px">
+        <div class="fst">🏛️ קומה</div>
+        <div class="fg">
+          <label class="flbl">הקלד קומה <span class="req">*</span></label>
+          <input class="fi" id="ctxFloor" placeholder="קומה 31 / גג / מרתף / קרקע..." style="font-size:15px;font-weight:700" oninput="updateSum()">
+        </div>
+      </div>
+
+      <div class="fsec" style="margin-bottom:12px">
+        <div class="fst">📍 אזור (אופציונלי)</div>
+        <div class="fg">
+          <div class="chips" style="margin-bottom:8px" id="areaChips">
+            <button class="chip" onclick="pickArea('פנים',this)">פנים</button>
+            <button class="chip" onclick="pickArea('חוץ',this)">חוץ</button>
+            <button class="chip" onclick="pickArea('לובי',this)">לובי</button>
+            <button class="chip" onclick="pickArea('חניה',this)">חניה</button>
+            <button class="chip" onclick="pickArea('גג',this)">גג</button>
+            <button class="chip" onclick="pickArea('מחסן',this)">מחסן</button>
+            <button class="chip" onclick="pickArea('פיתוח',this)">פיתוח</button>
+          </div>
+          <input class="fi" id="ctxArea" placeholder="או הקלד אזור חופשי..." oninput="clearAreaChips();updateSum()">
+        </div>
+      </div>
+
+      <div class="sumbox" id="ctxSum">
+        <div class="sumlbl">✅ כל ליקוי חדש יקבל:</div>
+        <div class="sumval" id="ctxSumTxt"></div>
+      </div>
+
+      <button class="sbtn" onclick="saveCtx()">✅ שמור והתחל סיור</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ DEFECT MODAL ═══ -->
+<div class="overlay" id="defModal">
+  <div class="modal">
+    <div class="mhandle"></div>
+    <div class="mhdr"><h2 id="defModalTitle">➕ ליקוי חדש</h2><div class="mclose" onclick="closeOv('defModal')">✕</div></div>
+    <div class="mbody">
+      <div class="fsec">
+        <div class="fst">📍 מיקום</div>
+        <div class="fgrid">
+          <div class="fg"><label class="flbl">פרויקט <span class="req">*</span></label><input class="fi" id="df-proj" placeholder="פרויקט..."></div>
+          <div class="fg"><label class="flbl">קומה <span class="req">*</span></label><input class="fi" id="df-floor" placeholder="קומה..."></div>
+          <div class="fg"><label class="flbl">אזור</label><input class="fi" id="df-area" placeholder="אזור..."></div>
+          <div class="fg"><label class="flbl">חדר <span class="req">*</span></label><input class="fi" id="df-room" placeholder="חדר 20..."></div>
+        </div>
+      </div>
+      <div class="fsec">
+        <div class="fst">📝 פרטי ליקוי</div>
+        <div class="fg"><label class="flbl">תיאור <span class="req">*</span></label><textarea class="fta" id="df-desc" placeholder="תאר את הליקוי..."></textarea></div>
+        <div class="fgrid">
+          <div class="fg"><label class="flbl">קטגוריה</label>
+            <select class="fsel" id="df-cat">
+              <option value="">בחר...</option><option>טיח / צבע</option><option>ריצוף / אריחים</option>
+              <option>אינסטלציה</option><option>חשמל</option><option>נגרות / דלתות</option>
+              <option>גבס / תקרות</option><option>אלומיניום / חלונות</option><option>פיתוח / חוץ</option>
+              <option>גג / איטום</option><option>אחר</option>
+            </select>
+          </div>
+          <div class="fg"><label class="flbl">דחיפות</label>
+            <select class="fsel" id="df-urg"><option>נמוך</option><option selected>רגיל</option><option>דחוף</option><option>קריטי</option></select>
+          </div>
+        </div>
+      </div>
+      <div class="fsec">
+        <div class="fst">👷 אחריות</div>
+        <div class="fgrid">
+          <div class="fg"><label class="flbl">קבלן <span class="req">*</span></label><select class="fsel" id="df-cont"></select></div>
+          <div class="fg"><label class="flbl">מנהל עבודה</label><input class="fi" id="df-fore" placeholder="שם..."></div>
+          <div class="fg"><label class="flbl">תאריך יעד</label><input class="fi" type="date" id="df-dead"></div>
+          <div class="fg"><label class="flbl">ביקורת חוזרת</label><input class="fi" type="date" id="df-insp"></div>
+        </div>
+      </div>
+      <div class="fsec"><div class="fst">📷 תמונות</div><div class="pharea" id="defPA"><div class="phadd" onclick="openPhotoMenu('def')">📷<span>הוסף</span></div></div></div>
+      <div class="fsec"><div class="fst">💬 הערת מפקח</div><div class="fg"><textarea class="fta" id="df-note" placeholder="הערות..."></textarea></div></div>
+      <button class="sbtn" onclick="saveDefect()">💾 שמור ליקוי</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ STATUS MODAL ═══ -->
+<div class="overlay" id="stModal">
+  <div class="modal">
+    <div class="mhandle"></div>
+    <div class="mhdr"><h2>🔄 עדכון סטטוס</h2><div class="mclose" onclick="closeOv('stModal')">✕</div></div>
+    <div class="mbody">
+      <div class="stgrid" id="stgrid"></div>
+      <div class="fsec" style="margin-top:8px"><div class="fg"><label class="flbl">הערה</label><textarea class="fta" id="stNote" placeholder="הערה לשינוי..."></textarea></div></div>
+      <div class="fsec" style="margin-top:8px"><div class="fst">📷 תמונת אחרי</div><div class="pharea" id="stPA"><div class="phadd" onclick="openPhotoMenu('st')">📷<span>הוסף</span></div></div></div>
+      <button class="sbtn" onclick="saveStatus()">✅ עדכן</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ DETAIL MODAL ═══ -->
+<div class="overlay" id="dtModal">
+  <div class="modal">
+    <div class="mhandle"></div>
+    <div class="mhdr"><h2 id="dtTitle">פרטי ליקוי</h2><div class="mclose" onclick="closeOv('dtModal')">✕</div></div>
+    <div class="mbody" id="dtBody"></div>
+  </div>
+</div>
+
+<!-- ═══ PHOTO SOURCE PICKER ═══ -->
+<div class="overlay" id="photoMenu">
+  <div class="modal">
+    <div class="mhandle"></div>
+    <div class="mhdr"><h2>📷 הוסף תמונה</h2><div class="mclose" onclick="closeOv('photoMenu')">✕</div></div>
+    <div class="mbody" style="display:flex;flex-direction:column;gap:9px">
+      <button onclick="doPick('camera')" style="background:var(--card);border:1px solid var(--bdr);border-radius:11px;color:var(--txt);font-family:Heebo,sans-serif;font-size:15px;font-weight:700;padding:14px;display:flex;align-items:center;gap:12px;cursor:pointer;direction:rtl;width:100%">
+        <span style="font-size:24px;flex-shrink:0">📸</span><div style="text-align:right"><div>צלם תמונה</div><div style="font-size:12px;color:var(--txt2);font-weight:400">פתח מצלמה</div></div>
+      </button>
+      <button onclick="doPick('gallery')" style="background:var(--card);border:1px solid var(--bdr);border-radius:11px;color:var(--txt);font-family:Heebo,sans-serif;font-size:15px;font-weight:700;padding:14px;display:flex;align-items:center;gap:12px;cursor:pointer;direction:rtl;width:100%">
+        <span style="font-size:24px;flex-shrink:0">🖼️</span><div style="text-align:right"><div>בחר מהגלריה</div><div style="font-size:12px;color:var(--txt2);font-weight:400">ספריית תמונות / Google Photos</div></div>
+      </button>
+      <button onclick="closeOv('photoMenu')" style="background:transparent;border:1px solid var(--bdr);border-radius:11px;color:var(--txt2);font-family:Heebo,sans-serif;font-size:14px;font-weight:600;padding:12px;cursor:pointer">ביטול</button>
+    </div>
+  </div>
+</div>
+
+<input type="file" id="inp-camera"  accept="image/*" capture="environment" multiple style="display:none" onchange="handleFiles(event)">
+<input type="file" id="inp-gallery" accept="image/*" multiple style="display:none" onchange="handleFiles(event)">
+
+<script>
+const URGC={קריטי:'#ef4444',דחוף:'#f97316',רגיל:'#3b82f6',נמוך:'#22c55e'};
+const STATUSES=[
+  {k:'חדש',c:'#ef4444',bg:'rgba(239,68,68,0.15)',i:'🔴'},
+  {k:'נשלח לטיפול',c:'#f97316',bg:'rgba(249,115,22,0.15)',i:'📤'},
+  {k:'בטיפול',c:'#f59e0b',bg:'rgba(245,158,11,0.15)',i:'🔧'},
+  {k:'בוצע חלקית',c:'#8b5cf6',bg:'rgba(139,92,246,0.15)',i:'⚡'},
+  {k:'בוצע ע"י קבלן',c:'#22c55e',bg:'rgba(34,197,94,0.15)',i:'✅'},
+  {k:'נבדק ונדרש תיקון נוסף',c:'#ec4899',bg:'rgba(236,72,153,0.15)',i:'🔁'},
+  {k:'אושר / נסגר',c:'#14b8a6',bg:'rgba(20,184,166,0.15)',i:'🔒'},
+];
+const stInfo=k=>STATUSES.find(s=>s.k===k)||{c:'#64748b',bg:'rgba(100,116,139,0.15)',i:'❓'};
+
+const S={
+  role:'admin',user:'רועי',filter:'all',
+  editId:null,statusId:null,selStatus:null,
+  urgency:'רגיל',photoTarget:'quick',
+  photos:{quick:[],def:[],st:[]},
+  ctx:{project:'',floor:'',area:''},
+  projects:[],
+  contractors:['קבלן א׳ — טיח/צבע','קבלן ב׳ — ריצוף','קבלן ג׳ — אינסטלציה','קבלן ד׳ — חשמל'],
+  mainContractor: '',
+  acHistory: {cat:[], desc:[], room:[]},
+};
+
+// STORAGE
+const LS={
+  defects:()=>{try{return JSON.parse(localStorage.getItem('pl_d')||'[]')}catch{return[]}},
+  save:(d)=>{
+    localStorage.setItem('pl_d',JSON.stringify(d));
+    updStorSz();
+    // Sync to Firebase
+    if(window.FB) window.FB.saveDefects(d);
+  },
+  ctx:()=>{try{return JSON.parse(localStorage.getItem('pl_ctx')||'{}')}catch{return{}}},
+  saveCtx:(c)=>localStorage.setItem('pl_ctx',JSON.stringify(c)),
+  projs:()=>{try{return JSON.parse(localStorage.getItem('pl_p')||'[]')}catch{return[]}},
+  saveProjs:(p)=>localStorage.setItem('pl_p',JSON.stringify(p)),
+};
+
+function today(){return new Date().toISOString().slice(0,10)}
+function addDays(n){const d=new Date();d.setDate(d.getDate()+n);return d.toISOString().slice(0,10)}
+
+// INIT
+function init(){
+  const rp=LS.projs(); S.projects=rp.length?rp:['פרויקט לדוגמה'];
+  const rc=LS.ctx(); if(rc.project)S.ctx=rc;
+  const role=new URLSearchParams(location.search).get('role');
+  if(role)S.role=role;
+  fillConts();
+  updateCtxBar();
+  renderList();
+  updStorSz();
+  if(!LS.defects().length)addSamples();
+  // Load theme preference
+  const savedTheme = localStorage.getItem('pl_theme');
+  if (savedTheme === 'light') {
+    document.body.classList.add('light');
+    setTimeout(() => updateThemeUI(true), 100);
+  }
+  // Load main contractor
+  S.mainContractor = localStorage.getItem('pl_contractor') || '';
+  setTimeout(() => {
+    const ci = document.getElementById('contractorInput');
+    if (ci) ci.value = S.mainContractor;
+  }, 300);
+  // Load autocomplete history
+  try {
+    const saved = localStorage.getItem('pl_ac');
+    S.acHistory = saved ? JSON.parse(saved) : {};
+  } catch(e) { S.acHistory = {}; }
+  // Pre-populate from real project data if empty
+  const defaultDesc = ["תיקון חיבור קונסטרוקציית תקרה", "תיקון שפכטל וצבע", "תיקון מדה מתפלסת מתחת לשטיח", "תיקוני שפכטל וצבע", "תיקון צבע", "ניקיון צבע שחור על פרופיל אלומיניום + החלפת גומיות", "צביעת ברגים בשחור", "תיקון מפגש גבס עם קיר מסך", "תוספת תאורת ספוטים לתאורה", "סגירת לוח בקרים + טיפול במעבר צנרת כולל צבע תקרה + סגירת חיפוי גבס", "תיקון חורים בתקרת מאסטר B", "התקנת אביזר מערכת בקרת כניסה", "תיקון יישום שטיחים בחיבור לריצוף מול הכניסה הראשית", "תיקון וכיסוי מעבר צנרת בתקרה", "ניקיון או החלפת חיפוי לבד מלוכלך", "הדבקת לעמוד פאנל", "תיקון הדבקת טפטים על הקיר מעל פאנל", "תיקון טפט בחיבורים", "תיקון צבע וכיפוף תעלה לחיבור לקיר מסך", "תיקון שפכטל וצבע על סינר צמוד לתקרת אריחים בצד של קיר המסך", "הדבקת פינת חיפוי לבד אמצעי", "תיקון גמר עמוד ולבד", "ניקיון צבע מקונסטרוקציית תקרה", "ניקיון צבע מקונסטרוקציית מחיצת אלומיניום", "תיקון ביצוע טפט גרפיקה", "תיקון חיבור בין פאנלים מתחת לטפט גרפיקה", "הכנות חשמל עם צנרת שחורה או להכניס לתוך שרשורי/קוברה ולחבר/לתלות בצורה מסודרת על השולחנות", "תיקון שפכטל וצבע מסביב למתזים", "להחליף לגומיות עבות יותר - מניעת רעידות דלתות וביצוע בידוד אקוסטי", "ניקיון צבע מחיפוי לבד", "תיקון צבע שחור מעל דלת", "תיקון גמר בין העמוד לקיר מסך", "תיקון שפכטל וצבע - מול חיפוי עמוד בחיבור עם קיר מסך", "ניקיון של כל הספים האקוסטיים בכל הדלתות בכל האזורים", "לנקות צבע שחור מקונסטרוקציית אלומיניום", "הורדת שאריות ניילון מכל השטיחים", "תיקון צבע שחור מסינר מעל דלת וניקיון צבע שחור מאלומיניום מעל הדלת", "תיקון טפט מעל פאנל", "תיקון שפכטל וצבע בפינה מעל חלון", "ניקיון חיפוי לבד וסגירה או החלפת אריח לבד צמוד לגבס", "ניקיון דבק מלבד חיפוי", "תיקון יישום טפט גרפיקה", "תיקוני צבע על הקירות", "ניקיון אלומיניום מצבע", "ביצוע הכנות למסך בקרת כניסה", "תיקוני שפכטל וצבע סביב חלון ודלת", "תיקוני צבע בין קירות לתקרה", "תיקוני שפכטל וצבע - חיבור חיפוי קיר בטון לקיר מסך", "סיום בידוד צנרת מיזוג אוויר", "להשלים ולתקן צבע - על קורת בטון ותעלות", "לסגור דלת ארון בקרים ולסדר צנרת ולצבוע", "ביצוע חשמל בצבע שחור או להכניס לתוך קוברה ולחבר בצורה מסודרת", "תיקון שטיח בכניסה", "לחתוך את הבידוד האקוסטי", "תיקון גמר בין טפט לעמוד", "סגירה ותיקון גמר של מעבר צנרת", "תיקוני שפכטל וצבע בסינר ליד קיר מסך", "להוסיף בידוד אקוסטי בקונסטרוקציה - קיר הפרדה עם חדר 26", "תיקוני טפט גרפיקה", "הצמדת טרמוסטט או צביעת קופסא כתומה", "סיום תיקון שפכטל וצבע וניקיון אלומיניום", "ביצוע הכנות וקידוחים בנגרות לצנרת מים וברזי ניל למדיח, מכונת קפה ושתי מכונות תמי 4", "סגירת גבס בסינר והשלמת צבע מאחורי עמוד", "השלמת תיקוני צבע", "תיקוני צבע בין ספוג לקירות", "תיקון סדקים, שפכטל וצבע", "תיקון חורים בספוגים ובין הקיר לספוג", "ניקיון, גמר צבע ושיפור מראה", "תיקון שפכטל וצבע - מתז בסינר", "תוספת תאורת ספוטים מעל מטבחונים", "כל הלבד שרוט מלוכלך ופגוע - לטפל או להחליף + קונסטרוקציה תקרה + סיום צבע + השלמת ארונית + התקנת נק' חשמל + החלפת גומיות", "קונסטרוקציה תקרה - ניקוי שפכטל וצבע + ניקיון צבע שחור + השלמת פלטה + נק' חשמל ורשת + החלפת גומיות", "ניקיון חיפוי לבד מלוכלך + קונסטרוקציה תקרה + ארונית פלטה + נק' חשמל ותקשורת + החלפת גומיות", "ניקיון מסטיק מעל פאנל", "להוריד פלסטיקים ולתקן צבע", "תיקון מגנטים בתקרות וסידור מרווחים בין אריחי תקרה", "תיקון חיבור צבע בין עמוד גבס לקיר מסך", "סיום התקנת ספוטים ותיקון צבע על תקרה וסינר", "ניקיון צבע מעל אלומיניום", "הוסיף פס צלירה עם שלושה ספוטים מכוונים לגרפיקה על הקיר"];
+  const defaultRooms = ["חדר 26", "חדר 30", "חדר 25", "קפיטריה", "חדר 24", "חדר 1", "כניסה ראשית", "פון בוט 27", "האדלמול ה 28", "כללי", "האדל 12", "כל הקומות", "כל האזורים", "האדלה 29", "מול חדר 30", "שכונה כחולה", "סוף שכונה אפורה - ימין", "פון בוט 17", "חדר 2", "חדר 4", "האדל 9", "האדל 8", "האדל 7", "האדל 6", "מדפי קפיטריה", "עמוד קפיטריה", "חדר 5", "שכונה צהובה פינת מבנה", "אופן ספייס", "אופן ספייס - משמאל כניסה", "קיר פינה ליד פון בוט 27", "מול פון בוט 27", "האדלמול ה - 28", "האדל 28", "מול חדר 30 - אטריום", "בין חדר 25 ל-26", "מטבחון קפיטריה", "מעל קפיטריה", "ארון גלגלון קפיטריה", "משמאל לארון הידרנט"];
+  const defaultCats = ["צבע / שפכטל", "נגרות", "אלומיניום", "גבס", "ריצוף", "אינסטלציה", "חשמל", "תקשורת", "מיזוג אוויר", "גרפיקה / טפט", "ניקיון", "בידוד אקוסטי", "קונסטרוקציה", "לבד / חיפוי"];
+  if (!S.acHistory.desc || !S.acHistory.desc.length) S.acHistory.desc = defaultDesc;
+  if (!S.acHistory.room || !S.acHistory.room.length) S.acHistory.room = defaultRooms;
+  if (!S.acHistory.cat  || !S.acHistory.cat.length)  S.acHistory.cat  = defaultCats;
+  localStorage.setItem('pl_ac', JSON.stringify(S.acHistory));
+  window.addEventListener('offline',()=>document.getElementById('offBanner').classList.add('show'));
+  window.addEventListener('online',()=>{document.getElementById('offBanner').classList.remove('show');toast('✅ חזרה לרשת')});
+  if(!navigator.onLine)document.getElementById('offBanner').classList.add('show');
+  if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});
+  if(!S.ctx.project)setTimeout(openCtxModal,500);
+}
+
+function addSamples(){
+  LS.save([
+    {id:'#001',project:'פרויקט לדוגמה',floor:'קומה 2',area:'פנים',room:'חדר 12',desc:'סדק בקיר הצפוני ~30 ס״מ',category:'טיח / צבע',urgency:'דחוף',contractor:'קבלן א׳ — טיח/צבע',foreman:'יוסי כהן',status:'חדש',created:today(),deadline:addDays(7),photos:[],log:[]},
+    {id:'#002',project:'פרויקט לדוגמה',floor:'קומה 3',area:'חוץ',room:'מרפסת',desc:'אריח שבור בפינה הדרום-מערבית',category:'ריצוף / אריחים',urgency:'קריטי',contractor:'קבלן ב׳ — ריצוף',foreman:'מושה לוי',status:'בטיפול',created:today(),deadline:addDays(-2),photos:[],log:[]},
+    {id:'#003',project:'פרויקט לדוגמה',floor:'קרקע',area:'פנים',room:'מטבח',desc:'ברז דולף מתחת לכיור',category:'אינסטלציה',urgency:'רגיל',contractor:'קבלן ג׳ — אינסטלציה',foreman:'',status:'בוצע ע"י קבלן',created:today(),deadline:addDays(3),photos:[],log:[]},
+  ]);
+}
+
+// TABS
+function showTab(t){
+  ['list','dash','settings'].forEach(id=>{
+    document.getElementById('tab-'+id).classList.toggle('on',id===t);
+    document.getElementById('page-'+id).classList.toggle('on',id===t);
+  });
+  if(t==='dash')renderDash();
+}
+
+// CTX BAR
+function updateCtxBar(){
+  const p=S.ctx.project,f=S.ctx.floor,a=S.ctx.area;
+  document.getElementById('cpPrj').textContent=p||'הגדר פרויקט';
+  document.getElementById('cpFlr').textContent=f||'הגדר קומה';
+  document.getElementById('cpArea').textContent=a||'אזור';
+  document.getElementById('cp-proj').className='cpill '+(p?'set':'miss');
+  document.getElementById('cp-floor').className='cpill '+(f?'set':'miss');
+  document.getElementById('cp-area').className='cpill'+(a?' set':'');
+  const open=LS.defects().filter(d=>d.status!=='אושר / נסגר').length;
+  document.getElementById('openCnt').textContent=open+' פתוחים';
+  document.getElementById('tbadge').textContent=open;
+}
+
+// CTX MODAL
+function openCtxModal(){
+  document.getElementById('ctxProj').value=S.ctx.project||'';
+  document.getElementById('ctxFloor').value=S.ctx.floor||'';
+  document.getElementById('ctxArea').value=S.ctx.area||'';
+  document.querySelectorAll('#areaChips .chip').forEach(b=>b.classList.toggle('on',b.textContent===S.ctx.area));
+  renderSavedProjs();
+  updateSum();
+  openOv('ctxModal');
+  setTimeout(()=>document.getElementById('ctxProj').focus(),350);
+}
+
+function renderSavedProjs(){
+  const wrap=document.getElementById('savedProjs');
+  const outer=document.getElementById('savedProjsWrap');
+  if(!S.projects.length){outer.style.display='none';return}
+  outer.style.display='block';
+  wrap.innerHTML=S.projects.map(p=>
+    `<button class="chip ${p===S.ctx.project?'on':''}" onclick="pickProj(this,'${p.replace(/'/g,"\\'")}')">${p}</button>`
+  ).join('');
+}
+
+function pickProj(el,name){
+  document.getElementById('ctxProj').value=name;
+  document.querySelectorAll('#savedProjs .chip').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');
+  updateSum();
+}
+
+function pickArea(val,el){
+  document.getElementById('ctxArea').value=val;
+  document.querySelectorAll('#areaChips .chip').forEach(b=>b.classList.toggle('on',b===el));
+  updateSum();
+}
+
+function clearAreaChips(){
+  document.querySelectorAll('#areaChips .chip').forEach(b=>b.classList.remove('on'));
+}
+
+function updateSum(){
+  const p=(document.getElementById('ctxProj')||{}).value||'';
+  const f=(document.getElementById('ctxFloor')||{}).value||'';
+  const a=(document.getElementById('ctxArea')||{}).value||'';
+  const box=document.getElementById('ctxSum');
+  if(!box)return;
+  box.style.display=(p||f)?'block':'none';
+  document.getElementById('ctxSumTxt').textContent=[p,f,a].filter(Boolean).join(' · ');
+}
+
+function saveCtx(){
+  const p=document.getElementById('ctxProj').value.trim();
+  const f=document.getElementById('ctxFloor').value.trim();
+  const a=document.getElementById('ctxArea').value.trim();
+  if(!p){document.getElementById('ctxProj').focus();toast('❗ הכנס שם פרויקט','w');return}
+  if(!f){document.getElementById('ctxFloor').focus();toast('❗ הכנס קומה','w');return}
+  if(!S.projects.includes(p)){S.projects.push(p);LS.saveProjs(S.projects)}
+  S.ctx={project:p,floor:f,area:a};
+  LS.saveCtx(S.ctx);
+  updateCtxBar();
+  closeOv('ctxModal');
+  renderList();
+  toast('✅ '+[p,f,a].filter(Boolean).join(' · ')+' — מוכן לסיור!');
+}
+
+// QUICK SAVE
+function quickSave(){
+  const room=document.getElementById('qRoom').value.trim();
+  const desc=document.getElementById('qDesc').value.trim();
+  const cat=document.getElementById('qCat').value.trim();
+  const cont=S.mainContractor||'קבלן ראשי';
+  if(!S.ctx.project||!S.ctx.floor){openCtxModal();toast('❗ הגדר פרויקט וקומה','w');return}
+  if(!room){document.getElementById('qRoom').focus();toast('❗ הכנס חדר / מיקום','w');return}
+  if(!desc){document.getElementById('qDesc').focus();toast('❗ הכנס תיאור','w');return}
+  const defects=LS.defects();
+  const id='#'+String(defects.length+1).padStart(3,'0');
+  defects.push({id,project:S.ctx.project,floor:S.ctx.floor,area:S.ctx.area,room,desc,category:cat,contractor:cont,urgency:S.urgency,status:'חדש',created:today(),photos:[...S.photos.quick],log:[{date:new Date().toISOString(),by:S.user,from:'-',to:'חדש',note:''}]});
+  // Save to autocomplete history
+  saveAcHistory('room', room);
+  saveAcHistory('desc', desc);
+  if(cat) saveAcHistory('cat', cat);
+  LS.save(defects);
+  document.getElementById('qDesc').value='';
+  document.getElementById('qRoom').value='';
+  document.getElementById('qCat').value='';
+  S.photos.quick=[];renderQStrip();
+  renderList();updateCtxBar();
+  toast('✅ ליקוי '+id+' נשמר');
+  document.getElementById('qDesc').focus();
+}
+
+function setUrg(val,el){
+  S.urgency=val;
+  document.querySelectorAll('.ub').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');
+}
+
+// ── AUTOCOMPLETE ─────────────────────────────────
+function saveAcHistory(field, value) {
+  if (!value || value.length < 2) return;
+  if (!S.acHistory[field]) S.acHistory[field] = [];
+  // Remove duplicate
+  S.acHistory[field] = S.acHistory[field].filter(v => v !== value);
+  // Add to front
+  S.acHistory[field].unshift(value);
+  // Keep max 50 items
+  if (S.acHistory[field].length > 50) S.acHistory[field] = S.acHistory[field].slice(0,50);
+  localStorage.setItem('pl_ac', JSON.stringify(S.acHistory));
+}
+
+function showAc(input, field) {
+  const val = input.value.trim().toLowerCase();
+  const list = document.getElementById('ac-' + field);
+  if (!list) return;
+  if (!val || val.length < 1) { list.style.display='none'; return; }
+  const items = (S.acHistory[field] || []).filter(v =>
+    v.toLowerCase().includes(val) && v !== input.value
+  ).slice(0, 8);
+  if (!items.length) { list.style.display='none'; return; }
+  list.innerHTML = items.map(v => {
+    const highlighted = v.replace(new RegExp('(' + val.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi'), '<mark>$1</mark>');
+    return `<div class="ac-item" onmousedown="pickAc('${field}','${v.replace(/'/g,"\'")}',event)">${highlighted}</div>`;
+  }).join('');
+  list.style.display = 'block';
+}
+
+function pickAc(field, value, e) {
+  e.preventDefault();
+  const inputMap = {room:'qRoom', desc:'qDesc', cat:'qCat'};
+  const inp = document.getElementById(inputMap[field]);
+  if (inp) { inp.value = value; inp.focus(); }
+  hideAc(field);
+}
+
+function hideAc(field) {
+  setTimeout(() => {
+    const list = document.getElementById('ac-' + field);
+    if (list) list.style.display = 'none';
+  }, 150);
+}
+
+function fillConts(){
+  ['qCont','df-cont'].forEach(id=>{
+    const el=document.getElementById(id);if(!el)return;
+    const prev=el.value;
+    el.innerHTML=id==='qCont'?'<option value="">קבלן...</option>':'<option value="">בחר...</option>';
+    S.contractors.forEach(c=>{
+      const short=c.split('—')[0].trim();
+      el.innerHTML+=`<option value="${c}">${id==='qCont'?short:c}</option>`;
+    });
+    if(prev)el.value=prev;
+  });
+}
+
+// PHOTOS
+function openPhotoMenu(target){S.photoTarget=target;openOv('photoMenu')}
+function doPick(src){
+  closeOv('photoMenu');
+  document.getElementById(src==='camera'?'inp-camera':'inp-gallery').click();
+}
+function handleFiles(e){
+  Array.from(e.target.files).forEach(file=>{
+    const r=new FileReader();
+    r.onload=ev=>{
+      const img=new Image();
+      img.onload=()=>{
+        const c=document.createElement('canvas');
+        const M=800;let w=img.width,h=img.height;
+        if(w>M){h=h*M/w;w=M}if(h>M){w=w*M/h;h=M}
+        c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);
+        const data=c.toDataURL('image/jpeg',0.72);
+        S.photos[S.photoTarget].push({data,date:new Date().toISOString()});
+        refreshPhotoUIs();
+      };
+      img.src=ev.target.result;
+    };
+    r.readAsDataURL(file);
+  });
+  e.target.value='';
+}
+function refreshPhotoUIs(){renderQStrip();renderPA('defPA','def');renderPA('stPA','st')}
+function renderQStrip(){
+  const s=document.getElementById('qStrip');if(!s)return;
+  const ph=S.photos.quick;
+  s.innerHTML=ph.map((p,i)=>
+    `<img class="qthumb" src="${p.data}" onclick="openLB('${p.data}')">
+     <span onclick="S.photos.quick.splice(${i},1);renderQStrip()" style="font-size:11px;color:var(--err);cursor:pointer;align-self:flex-start">✕</span>`
+  ).join('')+(ph.length?`<button class="qpbtn" style="width:32px;height:32px;font-size:15px" onclick="openPhotoMenu('quick')">+</button>`:'');
+}
+function renderPA(areaId,target){
+  const a=document.getElementById(areaId);if(!a)return;
+  const ph=S.photos[target];
+  a.innerHTML=ph.map((p,i)=>
+    `<div class="phprev"><img src="${p.data}" onclick="openLB('${p.data}')"><button class="phrm" onclick="S.photos.${target}.splice(${i},1);renderPA('${areaId}','${target}')">✕</button></div>`
+  ).join('')+`<div class="phadd" onclick="openPhotoMenu('${target}')">📷<span>הוסף</span></div>`;
+}
+
+// RENDER LIST
+function renderList(){
+  let d=LS.defects();
+  if(S.filter!=='all')d=d.filter(x=>x.status===S.filter);
+  document.getElementById('listCnt').textContent=d.length+' ליקויים';
+  const wrap=document.getElementById('listWrap');
+  if(!d.length){wrap.innerHTML=`<div class="empty"><div class="ei">📋</div><h3>אין ליקויים</h3><p>הוסף ליקוי בשורת הסיור למעלה</p></div>`;return}
+  wrap.innerHTML=d.map(cardHTML).join('');
+}
+
+function cardHTML(d){
+  const st=stInfo(d.status);
+  const uc=URGC[d.urgency]||'#64748b';
+  const od=d.deadline&&d.deadline<today()&&d.status!=='אושר / נסגר';
+  const thumbs=(d.photos||[]).slice(0,4).map(p=>`<img class="thumb" src="${p.data}" onclick="openLB('${p.data}')">`).join('');
+  return `<div class="dcard">
+    <div class="ch" onclick="openDetail('${d.id}')">
+      <span class="cnum">${d.id}</span>
+      <div class="ctitle">${d.desc.length>55?d.desc.slice(0,55)+'…':d.desc}</div>
+      <div class="udot" style="background:${uc};color:${uc}"></div>
+    </div>
+    <div class="cb" onclick="openDetail('${d.id}')">
+      <div class="cloc"><span>🏢 ${d.project||'—'}</span><span style="color:var(--txt3)">·</span><span>🏛️ ${d.floor||'—'}</span><span style="color:var(--txt3)">·</span><span>📍 ${d.room||'—'}</span></div>
+      <div class="cmeta">
+        <span class="stbadge" style="background:${st.bg};color:${st.c}">${st.i} ${d.status}</span>
+        ${d.category?`<span class="mtag">🔧 ${d.category}</span>`:''}
+        ${d.deadline?`<span class="mtag" style="${od?'color:var(--err);font-weight:800':''}">📅 ${d.deadline}${od?' ⚠️':''}</span>`:''}
+        <span class="mtag">👷 ${(d.contractor||'—').split('—')[0].trim()}</span>
+      </div>
+    </div>
+    ${thumbs?`<div class="tstrip">${thumbs}</div>`:''}
+    <div class="cacts">
+      ${S.role!=='viewer'?`<button class="abtn p" onclick="openStatus('${d.id}')">🔄 סטטוס</button>`:''}
+      <button class="abtn" onclick="qAddPhoto('${d.id}')">📷</button>
+      ${S.role==='admin'?`<button class="abtn" onclick="editDefect('${d.id}')">✏️</button>`:''}
+      ${S.role==='admin'?`<button class="abtn" style="color:var(--err);border-color:var(--err)" onclick="deleteDefect('${d.id}')">🗑️</button>`:''}
+    </div>
+  </div>`;
+}
+
+function setFilter(val,el){
+  S.filter=val;
+  document.querySelectorAll('.fc').forEach(c=>c.classList.remove('on'));
+  el.classList.add('on');
+  renderList();
+}
+
+// QUICK ADD PHOTO TO CARD
+function qAddPhoto(id){
+  S.photoTarget='_card';window._qCardId=id;openOv('photoMenu');
+  // Patch doPick for this one-shot
+  window._cardPickMode=true;
+}
+const _origDoPick=window.doPick;
+window.doPick=function(src){
+  if(window._cardPickMode){
+    window._cardPickMode=false;
+    closeOv('photoMenu');
+    const inp=document.getElementById(src==='camera'?'inp-camera':'inp-gallery');
+    const prevOnChange=inp.onchange;
+    inp.onchange=e=>{
+      Array.from(e.target.files).forEach(file=>{
+        const r=new FileReader();
+        r.onload=ev=>{
+          const img=new Image();
+          img.onload=()=>{
+            const c=document.createElement('canvas');
+            const M=800;let w=img.width,h=img.height;
+            if(w>M){h=h*M/w;w=M}if(h>M){w=w*M/h;h=M}
+            c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);
+            const data=c.toDataURL('image/jpeg',0.72);
+            const def=LS.defects();
+            const i=def.findIndex(d=>d.id===window._qCardId);
+            if(i>-1){if(!def[i].photos)def[i].photos=[];def[i].photos.push({data,date:new Date().toISOString()});LS.save(def)}
+            renderList();toast('📷 תמונה נוספה');
+          };
+          img.src=ev.target.result;
+        };
+        r.readAsDataURL(file);
+      });
+      e.target.value='';
+      inp.onchange=prevOnChange;
+    };
+    inp.click();
+    return;
+  }
+  closeOv('photoMenu');
+  document.getElementById(src==='camera'?'inp-camera':'inp-gallery').click();
+};
+
+// EDIT DEFECT
+function deleteDefect(id) {
+  const defects = LS.defects();
+  const d = defects.find(x => x.id === id);
+  if (!d) return;
+  const short = d.desc.length > 40 ? d.desc.slice(0,40)+'...' : d.desc;
+  if (!confirm('מחק ליקוי ' + id + '?\n' + short)) return;
+  const updated = defects.filter(x => x.id !== id);
+  LS.save(updated);
+  renderList();
+  updateCtxBar();
+  toast('🗑️ ליקוי ' + id + ' נמחק');
+}
+
+function editDefect(id){
+  const d=LS.defects().find(x=>x.id===id);if(!d)return;
+  S.editId=id;S.photos.def=[...(d.photos||[])];
+  document.getElementById('defModalTitle').textContent='✏️ ליקוי '+id;
+  fillConts();
+  setTimeout(()=>{
+    document.getElementById('df-proj').value=d.project||'';
+    document.getElementById('df-floor').value=d.floor||'';
+    document.getElementById('df-area').value=d.area||'';
+    document.getElementById('df-room').value=d.room||'';
+    document.getElementById('df-desc').value=d.desc||'';
+    document.getElementById('df-cat').value=d.category||'';
+    document.getElementById('df-urg').value=d.urgency||'רגיל';
+    document.getElementById('df-cont').value=d.contractor||'';
+    document.getElementById('df-fore').value=d.foreman||'';
+    document.getElementById('df-dead').value=d.deadline||'';
+    document.getElementById('df-insp').value=d.inspection||'';
+    document.getElementById('df-note').value=d.note||'';
+    renderPA('defPA','def');
+  },60);
+  openOv('defModal');
+}
+
+function saveDefect(){
+  const p=document.getElementById('df-proj').value.trim();
+  const f=document.getElementById('df-floor').value.trim();
+  const r=document.getElementById('df-room').value.trim();
+  const d=document.getElementById('df-desc').value.trim();
+  const c=document.getElementById('df-cont').value;
+  if(!p||!f||!r||!d||!c){toast('❗ מלא שדות חובה','w');return}
+  const defects=LS.defects();
+  if(S.editId){
+    const i=defects.findIndex(x=>x.id===S.editId);
+    if(i>-1)Object.assign(defects[i],{project:p,floor:f,area:document.getElementById('df-area').value,room:r,desc:d,category:document.getElementById('df-cat').value,urgency:document.getElementById('df-urg').value,contractor:c,foreman:document.getElementById('df-fore').value,deadline:document.getElementById('df-dead').value,inspection:document.getElementById('df-insp').value,note:document.getElementById('df-note').value,photos:S.photos.def,updatedBy:S.user,updatedAt:new Date().toISOString()});
+  }else{
+    const id='#'+String(defects.length+1).padStart(3,'0');
+    defects.push({id,project:p,floor:f,area:document.getElementById('df-area').value,room:r,desc:d,category:document.getElementById('df-cat').value,urgency:document.getElementById('df-urg').value,contractor:c,foreman:document.getElementById('df-fore').value,status:'חדש',created:today(),deadline:document.getElementById('df-dead').value,inspection:document.getElementById('df-insp').value,note:document.getElementById('df-note').value,photos:S.photos.def,createdBy:S.user,log:[{date:new Date().toISOString(),by:S.user,from:'-',to:'חדש',note:''}]});
+  }
+  LS.save(defects);S.editId=null;S.photos.def=[];
+  closeOv('defModal');renderList();updateCtxBar();toast('✅ נשמר');
+}
+
+// STATUS
+function openStatus(id){
+  S.statusId=id;S.selStatus=null;S.photos.st=[];
+  const d=LS.defects().find(x=>x.id===id);
+  document.getElementById('stNote').value='';
+  document.getElementById('stgrid').innerHTML=STATUSES.map(s=>{
+    const locked=s.k==='אושר / נסגר'&&S.role!=='admin';
+    return `<div class="stopt ${d&&d.status===s.k?'on':''}" style="color:${s.c};background:${s.bg}${d&&d.status===s.k?`;border-color:${s.c}`:''}" onclick="${locked?`toast('🔒 רק מנהל','w')`:`selSt('${s.k}')`}">${s.i} ${s.k}</div>`;
+  }).join('');
+  renderPA('stPA','st');
+  openOv('stModal');
+}
+
+function selSt(k){
+  S.selStatus=k;
+  document.querySelectorAll('.stopt').forEach(el=>{
+    const match=STATUSES.find(s=>el.textContent.includes(s.k));
+    if(match)el.classList.toggle('on',match.k===k);
+  });
+}
+
+function saveStatus(){
+  if(!S.selStatus){toast('❗ בחר סטטוס','w');return}
+  const defects=LS.defects();
+  const i=defects.findIndex(d=>d.id===S.statusId);if(i<0)return;
+  const old=defects[i].status;
+  const note=document.getElementById('stNote').value.trim();
+  defects[i].status=S.selStatus;defects[i].updatedBy=S.user;defects[i].updatedAt=new Date().toISOString();
+  if(S.selStatus==='אושר / נסגר'){defects[i].closedBy=S.user;defects[i].closedAt=today()}
+  if(S.photos.st.length)defects[i].photos=[...(defects[i].photos||[]),...S.photos.st];
+  if(!defects[i].log)defects[i].log=[];
+  defects[i].log.push({date:new Date().toISOString(),by:S.user,from:old,to:S.selStatus,note});
+  LS.save(defects);closeOv('stModal');renderList();updateCtxBar();toast('✅ → '+S.selStatus);
+}
+
+// DETAIL
+function openDetail(id){
+  const d=LS.defects().find(x=>x.id===id);if(!d)return;
+  const st=stInfo(d.status);
+  const od=d.deadline&&d.deadline<today()&&d.status!=='אושר / נסגר';
+  const thumbs=(d.photos||[]).map(p=>`<img src="${p.data}" style="width:74px;height:74px;object-fit:cover;border-radius:8px;border:2px solid var(--bdr);cursor:pointer" onclick="openLB('${p.data}')">`).join('');
+  const log=(d.log||[]).map(l=>`<div style="padding:7px 14px;border-bottom:1px solid var(--bdr);font-size:12px"><div style="color:var(--txt2)">${(l.date||'').slice(0,16).replace('T',' ')} · ${l.by||''}</div><div><span style="color:var(--err)">${l.from||'—'}</span> → <span style="color:var(--ok)">${l.to||'—'}</span></div>${l.note?`<div style="color:var(--txt2)">${l.note}</div>`:''}</div>`).join('');
+  document.getElementById('dtTitle').textContent='ליקוי '+d.id;
+  document.getElementById('dtBody').innerHTML=`
+    <div class="fsec" style="margin-bottom:10px"><div style="padding:12px 14px"><div style="font-size:15px;font-weight:800;margin-bottom:7px">${d.desc}</div><span class="stbadge" style="background:${st.bg};color:${st.c}">${st.i} ${d.status}</span></div></div>
+    <div class="fsec" style="margin-bottom:10px"><div class="fst">📍 מיקום</div>
+      <div class="dfield"><span class="dflbl">פרויקט</span><span class="dfval">${d.project||'—'}</span></div>
+      <div class="dfield"><span class="dflbl">קומה</span><span class="dfval">${d.floor||'—'}</span></div>
+      <div class="dfield"><span class="dflbl">אזור</span><span class="dfval">${d.area||'—'}</span></div>
+      <div class="dfield"><span class="dflbl">חדר</span><span class="dfval">${d.room||'—'}</span></div>
+    </div>
+    <div class="fsec" style="margin-bottom:10px"><div class="fst">📋 פרטים</div>
+      <div class="dfield"><span class="dflbl">קטגוריה</span><span class="dfval">${d.category||'—'}</span></div>
+      <div class="dfield"><span class="dflbl">דחיפות</span><span class="dfval" style="color:${URGC[d.urgency]||'#fff'};font-weight:800">${d.urgency||'—'}</span></div>
+      <div class="dfield"><span class="dflbl">קבלן</span><span class="dfval">${d.contractor||'—'}</span></div>
+      <div class="dfield"><span class="dflbl">תאריך יעד</span><span class="dfval" style="${od?'color:var(--err);font-weight:800':''}">${d.deadline||'—'}${od?' ⚠️':''}</span></div>
+    </div>
+    ${d.note?`<div class="fsec" style="margin-bottom:10px"><div class="fst">💬 הערת מפקח</div><div style="padding:11px 14px;font-size:13px;line-height:1.6">${d.note}</div></div>`:''}
+    ${thumbs?`<div class="fsec" style="margin-bottom:10px"><div class="fst">📷 תמונות (${d.photos.length})</div><div style="display:flex;gap:7px;padding:10px;flex-wrap:wrap">${thumbs}</div></div>`:''}
+    ${log?`<div class="fsec" style="margin-bottom:10px"><div class="fst">📋 היסטוריה</div>${log}</div>`:''}
+    <div style="display:flex;gap:7px;margin-top:4px;flex-wrap:wrap">
+      ${S.role!=='viewer'?`<button class="sbtn" style="flex:2" onclick="closeOv('dtModal');openStatus('${d.id}')">🔄 עדכן סטטוס</button>`:''}
+      ${S.role==='admin'?`<button class="sbtn ghost" style="flex:1" onclick="closeOv('dtModal');editDefect('${d.id}')">✏️ ערוך</button>`:''}
+      ${S.role==='admin'?`<button class="sbtn ghost" style="flex:1;color:var(--err);border-color:var(--err)" onclick="closeOv('dtModal');deleteDefect('${d.id}')">🗑️ מחק</button>`:''}
+    </div>`;
+  openOv('dtModal');
+}
+
+// DASHBOARD
+function renderDash(){
+  const all=LS.defects();
+  const cnt={};STATUSES.forEach(s=>cnt[s.k]=all.filter(d=>d.status===s.k).length);
+  const open=all.filter(d=>d.status!=='אושר / נסגר').length;
+  document.getElementById('dgrid').innerHTML=[
+    {l:'סך הכל',n:all.length,cl:'',i:'📋'},{l:'פתוחים',n:open,cl:'r',i:'🔴'},
+    {l:'סגורים',n:cnt['אושר / נסגר']||0,cl:'g',i:'✅'},
+    {l:'עבר יעד',n:all.filter(d=>d.deadline&&d.deadline<today()&&d.status!=='אושר / נסגר').length,cl:'o',i:'⚠️'},
+    {l:'קריטיים',n:all.filter(d=>d.urgency==='קריטי'&&d.status!=='אושר / נסגר').length,cl:'p',i:'🚨'},
+    {l:'לבדיקה',n:cnt['בוצע ע"י קבלן']||0,cl:'y',i:'🔍'},
+  ].map(c=>`<div class="dc ${c.cl}"><div class="dcico">${c.i}</div><div class="dclbl">${c.l}</div><div class="dcnum">${c.n}</div></div>`).join('');
+  document.getElementById('pbars').innerHTML=STATUSES.map(s=>{
+    const n=cnt[s.k]||0,pct=all.length?Math.round(n/all.length*100):0;
+    return `<div class="prow"><div class="plbl" style="color:${s.c}">${s.i} ${s.k.split(' ')[0]}</div><div class="ptrack"><div class="pfill" style="width:${pct}%;background:${s.c}"></div></div><div class="pcnt">${n}</div></div>`;
+  }).join('');
+  const ov=all.filter(d=>d.deadline&&d.deadline<today()&&d.status!=='אושר / נסגר');
+  document.getElementById('overdueWrap').innerHTML=ov.length
+    ?ov.map(d=>`<div style="display:flex;align-items:center;gap:7px;padding:7px 0;border-bottom:1px solid var(--bdr);cursor:pointer" onclick="openDetail('${d.id}')"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--acc2)">${d.id}</span><span style="flex:1;font-size:13px">${d.desc.slice(0,38)}…</span><span style="font-size:11px;color:var(--err);font-weight:700">${d.deadline}</span></div>`).join('')
+    :`<div style="font-size:13px;color:var(--ok);padding:4px 0">✅ אין ליקויים שעברו תאריך יעד</div>`;
+}
+
+// OVERLAY
+function openOv(id){const el=document.getElementById(id);el.style.display='flex';requestAnimationFrame(()=>el.classList.add('open'))}
+function closeOv(id){const el=document.getElementById(id);el.classList.remove('open');setTimeout(()=>{el.style.display='none'},250)}
+document.querySelectorAll('.overlay').forEach(ov=>ov.addEventListener('click',e=>{if(e.target===ov)closeOv(ov.id)}));
+
+// LIGHTBOX
+function openLB(src){document.getElementById('lbImg').src=src;document.getElementById('lbox').classList.add('open')}
+function closeLB(){document.getElementById('lbox').classList.remove('open')}
+
+// UTILS
+function toast(msg,type){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.style.background=type==='w'?'var(--warn)':type==='d'?'var(--err)':'var(--ok)';
+  t.style.color=type==='w'?'#000':'#fff';
+  t.classList.add('show');clearTimeout(t._t);
+  t._t=setTimeout(()=>t.classList.remove('show'),2500);
+}
+function toggleTheme() {
+  const isLight = document.body.classList.toggle('light');
+  localStorage.setItem('pl_theme', isLight ? 'light' : 'dark');
+  updateThemeUI(isLight);
+}
+
+function updateThemeUI(isLight) {
+  const icon  = document.getElementById('themeIcon');
+  const label = document.getElementById('themeLabel');
+  const thumb = document.getElementById('themeThumb');
+  const toggle = document.getElementById('themeToggle');
+  if (icon)  icon.textContent  = isLight ? '☀️' : '🌙';
+  if (label) label.textContent = isLight ? 'מסך בהיר' : 'מסך כהה';
+  if (thumb) thumb.style.transform = isLight ? 'translateX(-24px)' : 'translateX(0)';
+  if (toggle) toggle.style.background = isLight ? '#f59e0b' : 'var(--acc)';
+}
+
+function updStorSz(){
+  try{const kb=Math.round((localStorage.getItem('pl_d')||'').length/1024);const el=document.getElementById('storSz');if(el)el.textContent=kb+' KB שמורים מקומית'}catch(e){}
+}
+function sendReport(method) {
+  openOv('reportModal');
+  window._reportMethod = method;
+}
+
+function buildReportText(defects, opts) {
+  const {floor, status} = opts;
+  let filtered = defects;
+  if (floor && floor !== 'all') filtered = filtered.filter(d => d.floor === floor);
+  if (status && status !== 'all') filtered = filtered.filter(d => d.status === status);
+
+  const proj = filtered[0]?.project || 'פרויקט';
+  const floorLabel = floor && floor !== 'all' ? floor : 'כל הקומות';
+  const date = new Date().toLocaleDateString('he-IL');
+
+  let lines = [];
+  lines.push(`📋 דוח ריג'קטים — ${proj}`);
+  lines.push(`🏛️ ${floorLabel} | 📅 ${date}`);
+  lines.push(`סה"כ: ${filtered.length} ליקויים`);
+  lines.push('─────────────────────');
+
+  const byStatus = {};
+  filtered.forEach(d => {
+    if (!byStatus[d.status]) byStatus[d.status] = [];
+    byStatus[d.status].push(d);
+  });
+
+  const statusOrder = ['חדש','נשלח לטיפול','בטיפול','בוצע חלקית','בוצע ע"י קבלן','נבדק ונדרש תיקון נוסף','אושר / נסגר'];
+  statusOrder.forEach(st => {
+    const items = byStatus[st];
+    if (!items || !items.length) return;
+    const emoji = {
+      'חדש':'🔴','נשלח לטיפול':'📤','בטיפול':'🔧',
+      'בוצע חלקית':'⚡','בוצע ע"י קבלן':'✅',
+      'נבדק ונדרש תיקון נוסף':'🔁','אושר / נסגר':'🔒'
+    }[st] || '•';
+    lines.push(`\n${emoji} ${st} (${items.length})`);
+    items.forEach(d => {
+      lines.push(`  ${d.id} | ${d.room} — ${d.desc.slice(0,60)}${d.desc.length>60?'...':''}`);
+    });
+  });
+
+  lines.push('\n─────────────────────');
+  lines.push(`נשלח מ-PunchList Pro | ${window.location.hostname}`);
+  return lines.join('\n');
+}
+
+function doSendReport() {
+  const defects = LS.defects();
+  const floor  = document.getElementById('rep-floor').value;
+  const status = document.getElementById('rep-status').value;
+  const method = window._reportMethod;
+
+  const text = buildReportText(defects, {floor, status});
+  const encoded = encodeURIComponent(text);
+
+  closeOv('reportModal');
+
+  if (method === 'whatsapp') {
+    window.open('https://wa.me/?text=' + encoded, '_blank');
+  } else if (method === 'email') {
+    const subject = encodeURIComponent("דוח ריג'קטים — " + (defects[0]?.project || 'פרויקט'));
+    window.open('mailto:?subject=' + subject + '&body=' + encoded, '_blank');
+  } else if (method === 'share') {
+    if (navigator.share) {
+      navigator.share({ title: "דוח ריג'קטים", text });
+    } else {
+      navigator.clipboard.writeText(text).then(() => toast('📋 הדוח הועתק!'));
+    }
+  }
+}
+
+function copyLink(role){
+  const url=location.origin+location.pathname+'?role='+role;
+  (navigator.clipboard||{writeText:()=>Promise.resolve()}).writeText(url).then(()=>toast('📋 קישור הועתק!'));
+}
+function exportCSV(){
+  const d=LS.defects();
+  const h=['מספר','פרויקט','קומה','אזור','חדר','תיאור','קטגוריה','דחיפות','קבלן','סטטוס','נפתח','תאריך יעד'];
+  const rows=d.map(r=>[r.id,r.project,r.floor,r.area,r.room,`"${(r.desc||'').replace(/"/g,'""')}"`,r.category,r.urgency,r.contractor,r.status,r.created,r.deadline]);
+  const csv='\uFEFF'+[h,...rows].map(r=>r.join(',')).join('\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download='punchlist.csv';a.click();
+  toast('📤 קובץ יוצא');
+}
+function clearAll(){
+  if(!confirm('מחק את כל הנתונים?'))return;
+  ['pl_d','pl_ctx','pl_p'].forEach(k=>localStorage.removeItem(k));
+  S.ctx={project:'',floor:'',area:''};S.projects=['פרויקט לדוגמה'];
+  updateCtxBar();renderList();toast('🗑️ נמחק');
+}
+
+window.addEventListener('DOMContentLoaded',init);
+
+// Live preview for report modal
+document.addEventListener('change', function(e) {
+  if (e.target.id === 'rep-floor' || e.target.id === 'rep-status') {
+    updateRepPreview();
+  }
+});
+
+function updateRepPreview() {
+  const floor  = (document.getElementById('rep-floor')  || {}).value || 'all';
+  const status = (document.getElementById('rep-status') || {}).value || 'all';
+  const defects = LS.defects();
+  const text = buildReportText(defects, {floor, status});
+  const el = document.getElementById('repPreview');
+  if (el) el.textContent = text.slice(0, 600) + (text.length > 600 ? '\n...' : '');
+}
+
+// Update preview when report modal opens
+// Report modal preview update
+document.addEventListener('click', function(e) {
+  if (e.target && e.target.closest && e.target.closest('[onclick*="reportModal"]')) {
+    setTimeout(updateRepPreview, 200);
+  }
+});
+</script>
+</body>
+</html>

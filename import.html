@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ייבוא ריג'קטים — משרדי טבולה קומה 33</title>
+<title>ייבוא ריג'קטים — משרדי טבולה כל הקומות (31+32+33)</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Segoe UI', Arial, sans-serif; background: #f1f5f9; color: #1e293b; direction: rtl; }
@@ -21,9 +21,7 @@
   .actions { padding: 0 32px 16px; display: flex; gap: 12px; flex-wrap: wrap; }
   .btn { border: none; padding: 12px 28px; border-radius: 8px; font-size: 15px; cursor: pointer; font-weight: 600; }
   .btn-primary { background: #2563eb; color: white; }
-  .btn-primary:hover { background: #1d4ed8; }
   .btn-success { background: #16a34a; color: white; }
-  .btn-success:hover { background: #15803d; }
   .msg { margin: 0 32px 16px; padding: 14px 18px; border-radius: 8px; font-weight: 600; display: none; }
   .msg.ok { background: #dcfce7; color: #166534; border: 1px solid #86efac; }
   .msg.err { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
@@ -40,39 +38,640 @@
 </style>
 </head>
 <body>
-
 <header>
-  <h1>📋 ייבוא ריג'קטים — משרדי טבולה קומה 33</h1>
-  <p>מגדל אמות אטריום · תאריך סיור: 15.03.2026 · PunchList Pro Import File</p>
+  <h1>📋 ייבוא ריג'קטים — משרדי טבולה כל הקומות (31+32+33)</h1>
+  <p>מגדל אמות אטריום · קומות 31, 32, 33 · סה״כ 276 ליקויים · PunchList Pro Import File</p>
 </header>
-
 <div class="stats">
   <div class="stat-card total"><div class="num" id="statTotal">—</div><div class="label">סה״כ ליקויים</div></div>
-  <div class="stat-card high"><div class="num" id="statHigh">—</div><div class="label">🔴 דחיפות גבוהה</div></div>
-  <div class="stat-card mid"><div class="num" id="statMid">—</div><div class="label">🟡 דחיפות בינונית</div></div>
-  <div class="stat-card low"><div class="num" id="statLow">—</div><div class="label">🟢 דחיפות נמוכה</div></div>
+  <div class="stat-card high"><div class="num" id="statHigh">—</div><div class="label">🔴 גבוה</div></div>
+  <div class="stat-card mid"><div class="num" id="statMid">—</div><div class="label">🟡 בינוני</div></div>
+  <div class="stat-card low"><div class="num" id="statLow">—</div><div class="label">🟢 נמוך</div></div>
 </div>
-
 <div class="actions">
-  <button class="btn btn-success" onclick="importToApp()">✅ ייבא לאפליקציה (הוסף ל-localStorage)</button>
+  <button class="btn btn-success" onclick="importToApp()">✅ ייבא לאפליקציה</button>
   <button class="btn btn-primary" onclick="downloadJSON()">⬇️ הורד JSON</button>
 </div>
 <div class="msg" id="msg"></div>
-
 <div class="table-wrap">
   <table>
-    <thead>
-      <tr>
-        <th>#</th><th>מזהה</th><th>אזור</th><th>חדר / מיקום</th><th>תיאור הליקוי</th><th>קטגוריה</th><th>דחיפות</th><th>סטטוס</th>
-      </tr>
-    </thead>
+    <thead><tr><th>#</th><th>מזהה</th><th>אזור</th><th>חדר / מיקום</th><th>תיאור הליקוי</th><th>קטגוריה</th><th>דחיפות</th></tr></thead>
     <tbody id="tbody"></tbody>
   </table>
 </div>
-
 <script>
 const DEFECTS = [
-  // ── עמוד 1 ──
+{id:"Q31-001",project:"משרדי טבולה",floor:"31",area:"כניסה",room:"כניסה ראשית",desc:"התקנת אביזר מערכת בקרת כניסה",category:"חשמל ותקשורת",contractor:"קבלן ראשי",urgency:"גבוה",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-002",project:"משרדי טבולה",floor:"31",area:"כניסה",room:"כניסה ראשית",desc:"תיקון יישום שטיחים בחיבור לריצוף מול הכניסה הראשית",category:"ריצוף / אריחים",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-003",project:"משרדי טבולה",floor:"31",area:"חדר 26",room:"חדר 26",desc:"תיקון וכיסוי מעבר צנרת בתקרה",category:"קונסטרוקציה ותקרה",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-004",project:"משרדי טבולה",floor:"31",area:"חדר 26",room:"חדר 26",desc:"ניקיון או החלפת חיפוי לבד מלוכלך",category:"ניקיון וסיום",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-005",project:"משרדי טבולה",floor:"31",area:"חדר 26",room:"חדר 26",desc:"הדבקת פאנל לעמוד",category:"נגרות ומטבח",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-006",project:"משרדי טבולה",floor:"31",area:"חדר 26",room:"חדר 26",desc:"תיקון שפכטל וצבע",category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-007",project:"משרדי טבולה",floor:"31",area:"חדר 26",room:"חדר 26",desc:"תיקון הדבקת טפטים על הקיר מעל פאנל",category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-008",project:"משרדי טבולה",floor:"31",area:"חדר 26",room:"חדר 26",desc:"תיקון טפט בחיבורים",category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-009",project:"משרדי טבולה",floor:"31",area:"חדר 26",room:"חדר 26",desc:"תיקון צבע וכיפוף תעלה לחיבור לקיר מסך",category:"חשמל ותקשורת",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-010",project:"משרדי טבולה",floor:"31",area:"חדר 26",room:"חדר 26",desc:"תיקון שפכטל וצבע על סינר צמוד לתקרת אריחים בצד של קיר המסך",category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-011",project:"משרדי טבולה",floor:"31",area:"חדר 26",room:"חדר 26",desc:"הדבקת פינת חיפוי לבד אמצעי",category:"נגרות ומטבח",contractor:"קבלן ראשי",urgency:"נמוך",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-012",project:"משרדי טבולה",floor:"31",area:"חדר 26",room:"חדר 26",desc:"תיקון גמר עמוד ולבד",category:"נגרות ומטבח",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-013",project:"משרדי טבולה",floor:"31",area:"חדר 26",room:"חדר 26",desc:"ניקיון צבע מקונסטרוקציית תקרה",category:"ניקיון וסיום",contractor:"קבלן ראשי",urgency:"נמוך",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-014",project:"משרדי טבולה",floor:"31",area:"חדר 26",room:"חדר 26",desc:"ניקיון צבע מקונסטרוקציית מחיצת אלומיניום",category:"ניקיון וסיום",contractor:"קבלן ראשי",urgency:"נמוך",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-015",project:"משרדי טבולה",floor:"31",area:"חדר 26",room:"חדר 26",desc:"תיקון ביצוע טפט גרפיקה",category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-016",project:"משרדי טבולה",floor:"31",area:"חדר 26",room:"חדר 26",desc:"תיקון חיבור בין פאנלים מתחת לטפט גרפיקה",category:"נגרות ומטבח",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-017",project:"משרדי טבולה",floor:"31",area:"אופן ספייס",room:"כלל האופן ספייס",desc:"ביצוע הכנות חשמל עם צנרת שחורה או להכניס לתוך קוברה ולחבר בצורה מסודרת על השולחנות",category:"חשמל ותקשורת",contractor:"קבלן ראשי",urgency:"גבוה",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-018",project:"משרדי טבולה",floor:"31",area:"אופן ספייס",room:"משמאל הכניסה",desc:"תיקון שפכטל וצבע מסביב למתזים",category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-019",project:"משרדי טבולה",floor:"31",area:"פון בוט 27",room:"קיר פינה ליד פון בוט 27",desc:"תיקון שפכטל וצבע בקיר פינה ליד פון בוט 27",category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-020",project:"משרדי טבולה",floor:"31",area:"כללי",room:"כל הקומות — דלתות",desc:"להחליף לגומיות עבות יותר למניעת רעידות דלתות וביצוע בידוד אקוסטי טוב יותר בכל הדלתות",category:"בידוד אקוסטי",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-021",project:"משרדי טבולה",floor:"31",area:"פון בוט 27",room:"פון בוט 27",desc:"ניקיון צבע מחיפוי לבד",category:"ניקיון וסיום",contractor:"קבלן ראשי",urgency:"נמוך",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-022",project:"משרדי טבולה",floor:"31",area:"פון בוט 27",room:"פון בוט 27",desc:"תיקון צבע שחור מעל דלת",category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"נמוך",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-023",project:"משרדי טבולה",floor:"31",area:"פון בוט 27",room:"פון בוט 27",desc:"תיקון חיבור קונסטרוקציית תקרה",category:"קונסטרוקציה ותקרה",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-024",project:"משרדי טבולה",floor:"31",area:"פון בוט 27",room:"מול פון בוט 27",desc:"תיקון גמר בין העמוד לקיר מסך",category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-025",project:"משרדי טבולה",floor:"31",area:"האדל 28",room:"מול האדל 28",desc:"תיקון שפכטל וצבע על חיפוי עמוד בחיבור עם קיר מסך — צד שמאל",category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-026",project:"משרדי טבולה",floor:"31",area:"כללי",room:"כל הדלתות בכל האזורים",desc:"ניקיון של כל הספים האקוסטיים בכל הדלתות בכל האזורים בכל הקומות",category:"ניקיון וסיום",contractor:"קבלן ראשי",urgency:"נמוך",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-027",project:"משרדי טבולה",floor:"31",area:"האדל 28",room:"האדל 28",desc:"ניקיון צבע שחור מקונסטרוקציית אלומיניום",category:"ניקיון וסיום",contractor:"קבלן ראשי",urgency:"נמוך",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-028",project:"משרדי טבולה",floor:"31",area:"כללי",room:"כל האזורים — שטיחים",desc:"הורדת שאריות ניילון מכל השטיחים בכל האזורים",category:"ניקיון וסיום",contractor:"קבלן ראשי",urgency:"נמוך",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-029",project:"משרדי טבולה",floor:"31",area:"האדל 29",room:"האדל 29",desc:"תיקון צבע שחור מסינר מעל דלת וניקיון צבע שחור מאלומיניום מעל הדלת",category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"נמוך",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-030",project:"משרדי טבולה",floor:"31",area:"האדל 29",room:"האדל 29",desc:"תיקון חיבור קונסטרוקציית תקרה",category:"קונסטרוקציה ותקרה",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-031",project:"משרדי טבולה",floor:"31",area:"חדר 30",room:"חדר 30",desc:"תיקון טפט מעל פאנל",category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-032",project:"משרדי טבולה",floor:"31",area:"חדר 30",room:"חדר 30",desc:"תיקון מדה מתפלסת מתחת לשטיח",category:"ריצוף / אריחים",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-033",project:"משרדי טבולה",floor:"31",area:"חדר 30",room:"חדר 30",desc:"תיקון שפכטל וצבע בפינה מעל חלון",category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-034",project:"משרדי טבולה",floor:"31",area:"חדר 30",room:"חדר 30",desc:"ניקיון חיפוי לבד וסגירה או החלפת אריח לבד צמוד לגבס כדי לסגור את הפער",category:"ניקיון וסיום",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-035",project:"משרדי טבולה",floor:"31",area:"חדר 30",room:"חדר 30",desc:"תיקון מדה מתפלסת מתחת לשטיח (נוסף)",category:"ריצוף / אריחים",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-036",project:"משרדי טבולה",floor:"31",area:"חדר 30",room:"חדר 30",desc:"ניקיון דבק מלבד חיפוי",category:"ניקיון וסיום",contractor:"קבלן ראשי",urgency:"נמוך",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-037",project:"משרדי טבולה",floor:"31",area:"חדר 30",room:"חדר 30",desc:"תיקון חיבור קונסטרוקציית תקרה",category:"קונסטרוקציה ותקרה",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-038",project:"משרדי טבולה",floor:"31",area:"חדר 30",room:"חדר 30",desc:"תיקון יישום טפט גרפיקה",category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-039",project:"משרדי טבולה",floor:"31",area:"חדר 30",room:"חדר 30",desc:"תיקון חיבור קונסטרוקציית תקרה (נוסף)",category:"קונסטרוקציה ותקרה",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-040",project:"משרדי טבולה",floor:"31",area:"חדר 30",room:"חדר 30",desc:"תיקוני צבע על הקירות",category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-041",project:"משרדי טבולה",floor:"31",area:"חדר 30",room:"חדר 30",desc:"ניקיון אלומיניום מצבע",category:"ניקיון וסיום",contractor:"קבלן ראשי",urgency:"נמוך",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-042",project:"משרדי טבולה",floor:"31",area:"חדר 30",room:"חדר 30",desc:"ביצוע הכנות למסך בקרת כניסה",category:"חשמל ותקשורת",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-043",project:"משרדי טבולה",floor:"31",area:"חדר 30",room:"חדר 30",desc:"תיקוני שפכטל וצבע סביב חלון ודלת",category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-044",project:"משרדי טבולה",floor:"31",area:"חדר 30",room:"חיבור תקרה לקיר אטריום מול חדר 30",desc:"תיקוני צבע בין קירות לתקרה",category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-045",project:"משרדי טבולה",floor:"31",area:"חדר 30",room:"חיבור חיפוי קיר בטון לקיר מסך מול חדר 30",desc:"תיקוני שפכטל וצבע בחיבור חיפוי קיר בטון לקיר מסך",category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-046",project:"משרדי טבולה",floor:"31",area:"חדר 30",room:"מול חדר 30",desc:"סיום בידוד צנרת מיזוג אוויר",category:"מיזוג אוויר",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-047",project:"משרדי טבולה",floor:"31",area:"האדל 28",room:"מול האדל 28",desc:"להשלים ולתקן צבע על קורת בטון ותעלות",category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-048",project:"משרדי טבולה",floor:"31",area:"האדל 28",room:"מול האדל 28",desc:"לסגור דלת ארון בקרים ולסדר צנרת ולצבוע אותה",category:"חשמל ותקשורת",contractor:"קבלן ראשי",urgency:"גבוה",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-049",project:"משרדי טבולה",floor:"31",area:"האדל 28",room:"מול האדל 28",desc:"חיבור חשמל בצבע שחור או להכניס לתוך קוברה ולחבר בצורה מסודרת על השולחנות",category:"חשמל ותקשורת",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-050",project:"משרדי טבולה",floor:"31",area:"חדר 26",room:"חדר 26",desc:"תיקון שטיח בכניסה",category:"ריצוף / אריחים",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-051",project:"משרדי טבולה",floor:"31",area:"חדרים 25-26",room:"בין חדר 25 ל-26",desc:"לחתוך את הבידוד האקוסטי",category:"בידוד אקוסטי",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-052",project:"משרדי טבולה",floor:"31",area:"חדר 25",room:"חדר 25",desc:"תיקון גמר בין טפט לעמוד",category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-053",project:"משרדי טבולה",floor:"31",area:"חדר 25",room:"חדר 25",desc:"סגירה ותיקון גמר של מעבר צנרת",category:"קונסטרוקציה ותקרה",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-054",project:"משרדי טבולה",floor:"31",area:"חדר 25",room:"חדר 25",desc:"תיקוני שפכטל וצבע בסינר ליד קיר מסך",category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-055",project:"משרדי טבולה",floor:"31",area:"חדר 25",room:"קיר הפרדה עם חדר 26",desc:"להוסיף בידוד אקוסטי בקונסטרוקציה — חיבור לקיר מסך",category:"בידוד אקוסטי",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-056",project:"משרדי טבולה",floor:"31",area:"חדר 25",room:"חדר 25",desc:"תיקוני טפט גרפיקה",category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-057",project:"משרדי טבולה",floor:"31",area:"חדר 25",room:"חדר 25",desc:"תיקוני שפכטל וצבע",category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-058",project:"משרדי טבולה",floor:"31",area:"חדר 25",room:"חדר 25",desc:"הצמדת טרמוסטט או צביעת קופסא כתומה",category:"חשמל ותקשורת",contractor:"קבלן ראשי",urgency:"נמוך",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-059",project:"משרדי טבולה",floor:"31",area:"חדר 25",room:"חדר 25",desc:"סיום תיקון שפכטל וצבע וניקיון אלומיניום",category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-060",project:"משרדי טבולה",floor:"31",area:"קפיטריה",room:"קפיטריה",desc:"ביצוע הכנות וקידוחים בנגרות לצנרת מים וברזי ניל למדיח, מכונת קפה ושתי מכונות תמי 4",category:"אינסטלציה ואש",contractor:"קבלן ראשי",urgency:"גבוה",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-061",project:"משרדי טבולה",floor:"31",area:"קפיטריה",room:"קפיטריה",desc:"סגירת גבס בסינר והשלמת צבע מאחורי עמוד",category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-062",project:"משרדי טבולה",floor:"31",area:"קפיטריה",room:"קפיטריה",desc:"השלמת תיקוני צבע",category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"נמוך",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-063",project:"משרדי טבולה",floor:"31",area:"קפיטריה",room:"קפיטריה",desc:"תיקוני צבע בין ספוג לקירות",category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"נמוך",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-064",project:"משרדי טבולה",floor:"31",area:"קפיטריה",room:"מטבחון קפיטריה",desc:"תיקון סדקים, שפכטל וצבע",category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-065",project:"משרדי טבולה",floor:"31",area:"קפיטריה",room:"מעל קפיטריה",desc:"תיקון חורים בספוגים ובין הקיר לספוג",category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-066",project:"משרדי טבולה",floor:"31",area:"קפיטריה",room:"ארון גלגלון קפיטריה",desc:"ניקיון, גמר צבע ושיפור מראה ארון גלגלון קפיטריה",category:"ניקיון וסיום",contractor:"קבלן ראשי",urgency:"נמוך",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-067",project:"משרדי טבולה",floor:"31",area:"קפיטריה",room:"משמאל לארון הידרנט",desc:"מתז בסינר משמאל לארון הידרנט — תיקון שפכטל וצבע",category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-068",project:"משרדי טבולה",floor:"31",area:"קפיטריה",room:"ארון גלגלון",desc:"ארון גלגלון — תיקון שפכטל וצבע",category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-069",project:"משרדי טבולה",floor:"31",area:"קפיטריה",room:"מעל מטבחונים",desc:"תוספת תאורת ספוטים מעל מטבחונים",category:"חשמל ותקשורת",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-070",project:"משרדי טבולה",floor:"31",area:"האדל 23",room:"האדל 23",desc:"כל הלבד שרוט מלוכלך ופגוע — לטפל או להחליף, קונסטרוקציה תקרה לנקות שפכטל וצבע, סיום צבע מעל סינר שחור בכניסה, השלמת ארונית ופלטה, התקנת נקודות חשמל ורשת, החלפת גומיות סביב משקוף דלת",category:"קונסטרוקציה ותקרה",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-071",project:"משרדי טבולה",floor:"31",area:"האדל 22",room:"האדל 22",desc:"קונסטרוקציה תקרה לנקות שפכטל וצבע, ניקיון צבע שחור מעל סינר בכניסה, השלמת פלטה ונקודות חשמל ורשת, החלפת גומיות סביב משקוף דלת",category:"קונסטרוקציה ותקרה",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-072",project:"משרדי טבולה",floor:"31",area:"האדל 21",room:"האדל 21",desc:"ניקיון חיפוי לבד מלוכלך, קונסטרוקציה תקרה לנקות שפכטל וצבע, סיום ניקיון צבע מעל סינר שחור בכניסה, ארונית פלטה ונקודות חשמל ותקשורת, החלפת גומיות סביב משקוף דלת",category:"קונסטרוקציה ותקרה",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-073",project:"משרדי טבולה",floor:"31",area:"חדר 24",room:"חדר 24",desc:"ניקיון מסטיק מעל פאנל",category:"ניקיון וסיום",contractor:"קבלן ראשי",urgency:"נמוך",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-074",project:"משרדי טבולה",floor:"31",area:"חדר 24",room:"חדר 24",desc:"להוריד פלסטיקים ולתקן צבע",category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"נמוך",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-075",project:"משרדי טבולה",floor:"31",area:"חדר 24",room:"חדר 24",desc:"תיקון מגנטים בתקרות וסידור מרווחים בין אריחי תקרה",category:"קונסטרוקציה ותקרה",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-076",project:"משרדי טבולה",floor:"31",area:"חדר 24",room:"חדר 24",desc:"תיקון חיבור צבע בין עמוד גבס לקיר מסך",category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-077",project:"משרדי טבולה",floor:"31",area:"חדר 24",room:"חדר 24",desc:"סיום התקנת ספוטים ותיקון צבע על תקרה וסינר",category:"חשמל ותקשורת",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-078",project:"משרדי טבולה",floor:"31",area:"חדר 24",room:"חדר 24",desc:"ניקיון צבע מעל אלומיניום",category:"ניקיון וסיום",contractor:"קבלן ראשי",urgency:"נמוך",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-079",project:"משרדי טבולה",floor:"31",area:"גרם מדרגות",room:"גרם מדרגות",desc:"הוספת פס צלירה עם שלושה ספוטים מכוונים לגרפיקה על הקיר, למרכז ומתחת למדרגות",category:"חשמל ותקשורת",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-080",project:"משרדי טבולה",floor:"31",area:"ארון תקשורת",room:"מעל ארון תקשורת",desc:"תיקון צבע מעל אזור ארון תקשורת",category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"נמוך",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-081",project:"משרדי טבולה",floor:"31",area:"שכונה כחולה אפורה",room:"אחרי נישת ארון תקשורת",desc:"השלמת גריל בתקרה אחרי נישת ארון תקשורת בשכונה הכחולה אפורה",category:"קונסטרוקציה ותקרה",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-082",project:"משרדי טבולה",floor:"31",area:"כללי",room:"כל האזורים — טפטים",desc:"תיקון התקנת טפטים בכל האזורים — בהרבה מקומות יש בועות וכל מיני בליטות מתחת לטפט",category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-083",project:"משרדי טבולה",floor:"31",area:"שכונה כחולה",room:"שכונה כחולה",desc:"תיקון צבע תעלה צמוד לקיר מסך",category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-084",project:"משרדי טבולה",floor:"31",area:"שכונה כחולה",room:"שכונה כחולה",desc:"סגירת ארון בקרים וכיסוי צנרת וצביעה — הערה תקפה לכל המקומות",category:"חשמל ותקשורת",contractor:"קבלן ראשי",urgency:"גבוה",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-085",project:"משרדי טבולה",floor:"31",area:"שכונה אפורה",room:"האדל 20",desc:"ניקיון קונסטרוקציית תקרה וניקיון לבד על הקיר ליד האדל 20",category:"ניקיון וסיום",contractor:"קבלן ראשי",urgency:"נמוך",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-086",project:"משרדי טבולה",floor:"31",area:"האדל 19",room:"האדל 19",desc:"ניקיון קונסטרוקציית תקרה וניקיון צבע שחור מעל דלת כניסה, השלמת פאנל פנימי, השלמת רוזטות כיסוי לצירים",category:"קונסטרוקציה ותקרה",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-087",project:"משרדי טבולה",floor:"31",area:"האדל 18",room:"האדל 18",desc:"ניקיון צבע שחור מעל דלת כניסה, השלמת פאנל פנימי, סגירה בין פרופיל ללבד",category:"קונסטרוקציה ותקרה",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-088",project:"משרדי טבולה",floor:"31",area:"כללי",room:"מדרגות",desc:"סיום ליטוש וצבע מדרגות",category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-089",project:"משרדי טבולה",floor:"31",area:"שכונה אפורה",room:"שכונה אפורה",desc:"בדיקת פיזור מיזוג אוויר עם יועץ המיזוג — הערה לכל האזורים",category:"מיזוג אוויר",contractor:"קבלן ראשי",urgency:"גבוה",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-090",project:"משרדי טבולה",floor:"31",area:"שכונה כחולה",room:"סוף שכונה כחולה משמאל",desc:"תיקון שפכטל, צבע, צביעת צנרת ספייר בתקרה ועיגון לתעלה",category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-091",project:"משרדי טבולה",floor:"31",area:"שכונה אפורה",room:"סוף שכונה אפורה מצד ימין",desc:"תיקוני חיבור צבע בין תקרת מאסטר B לקירות ותיקון חורים על תקרת מאסטר B",category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-092",project:"משרדי טבולה",floor:"31",area:"שכונה אפורה",room:"סוף שכונה אפורה מצד ימין",desc:"תיקוני שפכטל וצבע וניקיון מסטיק לבן מפאנל שחור",category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-093",project:"משרדי טבולה",floor:"31",area:"פון בוט 17",room:"פון בוט 17",desc:"ניקיון צבע שחור על פרופיל אלומיניום, החלפת גומיות סביב הדלת",category:"ניקיון וסיום",contractor:"קבלן ראשי",urgency:"נמוך",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-094",project:"משרדי טבולה",floor:"31",area:"פון בוט 16",room:"פון בוט 16",desc:"ניקיון צבע שחור על פרופיל אלומיניום, החלפת גומיות סביב הדלת",category:"ניקיון וסיום",contractor:"קבלן ראשי",urgency:"נמוך",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-095",project:"משרדי טבולה",floor:"31",area:"פון בוט 15",room:"פון בוט 15",desc:"ניקיון צבע שחור על קונסטרוקציה ופרופיל אלומיניום, תיקון הדבקת פאנל, החלפת גומיות סביב הדלת",category:"קונסטרוקציה ותקרה",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-096",project:"משרדי טבולה",floor:"31",area:"פון בוט 17",room:"בקצה מול קיר מסך מול פון בוט 17",desc:"לטפל בתאורה בקצה מול קיר מסך מול פון בוט 17",category:"חשמל ותקשורת",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-097",project:"משרדי טבולה",floor:"31",area:"האדל 14",room:"מול האדל 14 צמוד לקיר מסך",desc:"לסגור ארון ולטפל בכיסוי צנרת כבילה",category:"חשמל ותקשורת",contractor:"קבלן ראשי",urgency:"גבוה",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-098",project:"משרדי טבולה",floor:"31",area:"האדל 14",room:"האדל 14",desc:"ניקיון צבע מקונסטרוקציה — ולדעת המפקח יש להוסיף עוד גוף תאורה",category:"ניקיון וסיום",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-099",project:"משרדי טבולה",floor:"31",area:"האדל 13",room:"האדל 13",desc:"לנקות קונסטרוקציית תקרה",category:"ניקיון וסיום",contractor:"קבלן ראשי",urgency:"נמוך",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-100",project:"משרדי טבולה",floor:"31",area:"פינת אופניים 12",room:"פינת אופניים 12",desc:"תיקון שפכטל בצבע מסביב לארון גלגלון, לנקות לסדר ולצבוע את פנים הארון",category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-101",project:"משרדי טבולה",floor:"31",area:"שכונה צהובה",room:"פינת שכונה צהובה לפינת המבנה",desc:"לסגור ארון ולטפל בצנרת",category:"חשמל ותקשורת",contractor:"קבלן ראשי",urgency:"גבוה",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-102",project:"משרדי טבולה",floor:"31",area:"שכונה צהובה",room:"שכונה צהובה פינת המבנה",desc:"תיקון שפכטל וצבע בין עמוד חיפוי גבס לקיר מסך משני צידי העמוד",category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-103",project:"משרדי טבולה",floor:"31",area:"חדר 1",room:"חדר 1",desc:"להצמיד טרמוסטט או לצבוע בשחור",category:"חשמל ותקשורת",contractor:"קבלן ראשי",urgency:"נמוך",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-104",project:"משרדי טבולה",floor:"31",area:"חדר 1",room:"חדר 1",desc:"ניקיון צבע מקונסטרוקציית התקרה",category:"ניקיון וסיום",contractor:"קבלן ראשי",urgency:"נמוך",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-105",project:"משרדי טבולה",floor:"31",area:"חדר 1",room:"חדר 1",desc:"סידור ואישור מגשי תקרה",category:"קונסטרוקציה ותקרה",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-106",project:"משרדי טבולה",floor:"31",area:"חדר 1",room:"חדר 1",desc:"ניקיון קונסטרוקציית תקרה ואלומיניום קיר מצבע, כולל יישור ואטום פאנל חלק הצמוד לתקרה",category:"קונסטרוקציה ותקרה",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-107",project:"משרדי טבולה",floor:"31",area:"חדר 2",room:"חדר 2",desc:"סידור וישור אריחי תקרה, תיקוני שפכטל סביב קונסטרוקציה, ניקיון צבע ושפכטל מהקונסטרוקציה, תיקוני צבע על סינר סביב תקרה אקוסטית, יישור ואטום פאנל צמוד לתקרה, הכנסת קופסה כתומה של טרמוסטט לתוך הפאנל או צביעתה בשחור",category:"קונסטרוקציה ותקרה",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-108",project:"משרדי טבולה",floor:"31",area:"חדר 3",room:"חדר 3",desc:"תיקון וישור אריחי תקרה, ניקיון קונסטרוקציית תקרה מצבע, תיקוני שפכטל וצבע על סינר גבס, תיקון חור מאחורי שקע כפול, השלמת ריצוף פאנל",category:"קונסטרוקציה ותקרה",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-109",project:"משרדי טבולה",floor:"31",area:"חדר 4",room:"חדר 4",desc:"תיקוני שפכטל וצבע, ניקיון לבד מול כניסה, תיקון פאנל על קיר מול דלת כניסה, יישור מגשי תקרה, ניקיון אלומיניום מצבע, הדבקת פאנל, ניקיון צבע שחור על סינר",category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-110",project:"משרדי טבולה",floor:"31",area:"האדל 11",room:"האדל 11",desc:"ניקיון קונסטרוקציה, הדבקת גלאי, ניקיון פאנל והשלמת גומיות",category:"קונסטרוקציה ותקרה",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-111",project:"משרדי טבולה",floor:"31",area:"האדל 10",room:"האדל 10",desc:"החלפת פאנלים לארוכים יותר משני צידי הארונית, ניקיון קונסטרוקציית תקרה, ניקיון צבע שחור מאלומיניום מעל דלת, החלפת גומיה סביב לדלת",category:"קונסטרוקציה ותקרה",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-112",project:"משרדי טבולה",floor:"31",area:"האדל 9",room:"האדל 9",desc:"ניקיון קונסטרוקציית תקרה, ניקיון אלומיניום מעל דלת בצבע שחור, החלפת גומיות סביב דלת",category:"קונסטרוקציה ותקרה",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-113",project:"משרדי טבולה",floor:"31",area:"האדל 8",room:"האדל 8",desc:"ניקיון קונסטרוקציית תקרה, ניקיון פאנל אלומיניום מעל דלת, החלפת גומיות סביב הדלת, השלמת נקודות חשמל ותקשורת בארונית",category:"קונסטרוקציה ותקרה",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-114",project:"משרדי טבולה",floor:"31",area:"האדל 7",room:"האדל 7",desc:"ניקיון אבק ולכלוך מקונסטרוקציית תקרה, ניקיון צבע מעל דלת, החלפת גומיות סביב הדלת, השלמת נקודות חשמל ותקשורת בארונית",category:"קונסטרוקציה ותקרה",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-115",project:"משרדי טבולה",floor:"31",area:"האדל 6",room:"האדל 6",desc:"ניקיון אבק ולכלוך מקונסטרוקציית תקרה, ניקיון צבע מעל דלת, החלפת גומיות סביב הדלת, השלמת נקודות חשמל ותקשורת בארונית",category:"קונסטרוקציה ותקרה",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-116",project:"משרדי טבולה",floor:"31",area:"האדל 5",room:"האדל 5",desc:"ניקיון אבק ולכלוך מחיפוי לבד ומקונסטרוקציית תקרה, ניקיון צבע מעל דלת, החלפת גומיות סביב הדלת, השלמת נקודות חשמל ותקשורת בארונית",category:"קונסטרוקציה ותקרה",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-117",project:"משרדי טבולה",floor:"31",area:"האדלים 8-11",room:"מעל האדלים 8 עד 11",desc:"תיקון צבע בין תקרת מאסטר B לסינר גבס מעל האדלים 8 עד 11",category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-118",project:"משרדי טבולה",floor:"31",area:"האדל 6",room:"צמוד לקיר מסך אחרי קיר נמוך",desc:"ביצוע סגירה בין קיר לבין פאנל תעלת חשמל — מול האדל 6 בסוף העמדות",category:"חשמל ותקשורת",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-119",project:"משרדי טבולה",floor:"31",area:"שכונה סגולה",room:"מתחת ארון בקרים פינה הסגולה",desc:"לצבוע צנרת מתחת לארון בקרים בפינה הסגולה",category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"נמוך",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-120",project:"משרדי טבולה",floor:"31",area:"שכונה סגולה",room:"לקראת סוף השכונה הסגולה",desc:"לפרק זווית ניצב על קורת בטון ולתקן צבע",category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-121",project:"משרדי טבולה",floor:"31",area:"שכונה סגולה",room:"סוף שכונה סגולה",desc:"לשפר את הגמר מסביב לפלאנג' ולצבוע אותו בצבע הקיר",category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+  {id:"Q31-122",project:"משרדי טבולה",floor:"31",area:"כללי",room:"כל הקומה",desc:"חיתוך שאריות אזיקונים בכל מקום",category:"ניקיון וסיום",contractor:"קבלן ראשי",urgency:"נמוך",status:"נשלח לטיפול",created:"2026-03-10",deadline:"",photos:[],log:[]},
+// ── עמוד 1 ──
+  {id:"Q32-001",project:"משרדי טבולה",floor:"32",area:"אזור דיינרים",room:"אזור דיינרים",
+   desc:"ניקיון חריץ בין ריצוף לקיר וסגירה עם חומר",
+   category:"ריצוף / אריחים",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-002",project:"משרדי טבולה",floor:"32",area:"כללי",room:"ארון מולטימדיה",
+   desc:"ארון מולטימדיה — פתיחת פתח לאוויר צח ופירוק סף תחתון בארון",
+   category:"חשמל ותקשורת",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-003",project:"משרדי טבולה",floor:"32",area:"כניסה",room:"קיר מסך",
+   desc:"תיקוני שפכטל וצבע וניקיון צבע מקיר מסך",
+   category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-004",project:"משרדי טבולה",floor:"32",area:"כללי",room:"לוח בקרים",
+   desc:"סגירת דלת ללוח בקרים",
+   category:"חשמל ותקשורת",contractor:"קבלן ראשי",urgency:"גבוה",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  // ── עמוד 2 ──
+  {id:"Q32-005",project:"משרדי טבולה",floor:"32",area:"כניסה",room:"אזור מקרר",
+   desc:"אזור מקרר — להוסיף ברז",
+   category:"אינסטלציה ואש",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-006",project:"משרדי טבולה",floor:"32",area:"כניסה מולטימדיה",room:"כניסת מולטימדיה",
+   desc:"ביצוע סינר גבס כמו בניישת מולטימדיה",
+   category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-007",project:"משרדי טבולה",floor:"32",area:"קפיטריה",room:"מדפי קפיטריה",
+   desc:"מדפי קפיטריה — צביעת ברגים בשחור",
+   category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"נמוך",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-008",project:"משרדי טבולה",floor:"32",area:"קפיטריה",room:"עמוד קפיטריה",
+   desc:"עמוד קפיטריה — תיקון מפגש גבס עם קיר מסך",
+   category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  // ── עמוד 3 ──
+  {id:"Q32-009",project:"משרדי טבולה",floor:"32",area:"מאסטר B",room:"תקרת מאסטר B",
+   desc:"סגירת חורים במאסטר B ותיקוני צבע בתקרה",
+   category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-010",project:"משרדי טבולה",floor:"32",area:"כללי",room:"חלון מילוט",
+   desc:"חלון מילוט — תיקון גבס והנחת פלטת עץ",
+   category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-011",project:"משרדי טבולה",floor:"32",area:"קפיטריה",room:"עמוד פינתי קפיטריה",
+   desc:"עמוד פינתי בקפיטריה — תיקון צבע על קורת בטון",
+   category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-012",project:"משרדי טבולה",floor:"32",area:"קפיטריה",room:"קפיטריה",
+   desc:"קפיטריה — תוספת תאורת ספוטים מעל מטבחון",
+   category:"חשמל ותקשורת",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  // ── עמוד 4 ──
+  {id:"Q32-013",project:"משרדי טבולה",floor:"32",area:"קפיטריה",room:"עמוד פינתי קפיטריה",
+   desc:"עמוד פינתי בקפיטריה — תיקון צבע על קורת בטון (נוסף)",
+   category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-014",project:"משרדי טבולה",floor:"32",area:"קפיטריה",room:"תקרת קפיטריה",
+   desc:"תקרת קפיטריה — תיקון וצבע על מגשי תקרה",
+   category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-015",project:"משרדי טבולה",floor:"32",area:"קפיטריה",room:"קפיטריה",
+   desc:"קפיטריה — תוספת ספוטים לתאורה",
+   category:"חשמל ותקשורת",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-016",project:"משרדי טבולה",floor:"32",area:"כללי",room:"סינר",
+   desc:"תיקון צבע על סינר ובחיבור עם הקיר",
+   category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"נמוך",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  // ── עמוד 5 ──
+  {id:"Q32-017",project:"משרדי טבולה",floor:"32",area:"קפיטריה",room:"עמוד קפיטריה",
+   desc:"עמוד קפיטריה — תיקון מפגש גבס עם קיר מסך",
+   category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-018",project:"משרדי טבולה",floor:"32",area:"קפיטריה",room:"מדפי קפיטריה",
+   desc:"מדפי קפיטריה — צביעת ברגים בשחור",
+   category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"נמוך",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-019",project:"משרדי טבולה",floor:"32",area:"לאונג'",room:"לאונג'",
+   desc:"לאונג' — תיקון חיבור בין פרקט לריצוף",
+   category:"ריצוף / אריחים",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-020",project:"משרדי טבולה",floor:"32",area:"קפיטריה",room:"משמאל לארון גלגלון",
+   desc:"קפיטריה משמאל לארון גלגלון — תיקון צבע",
+   category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"נמוך",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  // ── עמוד 6 ──
+  {id:"Q32-021",project:"משרדי טבולה",floor:"32",area:"כללי",room:"צנרת אש",
+   desc:"ביצוע ניקיון וצבע סביב צנרת אש",
+   category:"אינסטלציה ואש",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-022",project:"משרדי טבולה",floor:"32",area:"נגרות",room:"סביב דלתות נגרות",
+   desc:"תיקוני שפכטל וצבע סביב דלתות נגרות",
+   category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-023",project:"משרדי טבולה",floor:"32",area:"כללי",room:"עמוד ליד קבלה",
+   desc:"עמוד ליד קבלה — תיקוני שפכטל וצבע",
+   category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-024",project:"משרדי טבולה",floor:"32",area:"קפיטריה",room:"פינת גבס מול קפיטריה",
+   desc:"פינת גבס מול קפיטריה — תיקוני שפכטל וצבע כולל חיבור לקיר מסך ותקרה",
+   category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  // ── עמוד 7 ──
+  {id:"Q32-025",project:"משרדי טבולה",floor:"32",area:"קפיטריה",room:"קפיטריה",
+   desc:"קפיטריה — תוספת ספוטים לתאורה",
+   category:"חשמל ותקשורת",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-026",project:"משרדי טבולה",floor:"32",area:"כללי",room:"סינר",
+   desc:"תיקון צבע על סינר ובחיבור עם הקיר",
+   category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"נמוך",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-027",project:"משרדי טבולה",floor:"32",area:"חדר 27",room:"חדר 27 רב תכליתי",
+   desc:"חדר 27 רב תכליתי — סגירת ארון בקרים, השלמת תקרת רשת לוגו מואר וגופי תאורה",
+   category:"חשמל ותקשורת",contractor:"קבלן ראשי",urgency:"גבוה",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-028",project:"משרדי טבולה",floor:"32",area:"כללי",room:"תיקון שפכטל וצבע סביב מעקה",
+   desc:"תיקון שפכטל וצבע סביב מעקה",
+   category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  // ── עמוד 8 ──
+  {id:"Q32-029",project:"משרדי טבולה",floor:"32",area:"כללי",room:"נישת לוח חשמל",
+   desc:"נישת לוח חשמל — ניקיון וצבע",
+   category:"חשמל ותקשורת",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-030",project:"משרדי טבולה",floor:"32",area:"חדר 27",room:"חדר 27 רב תכליתי",
+   desc:"חדר 27 רב תכליתי — החלפת מגש ניקוז ליחידת מיזוג אוויר",
+   category:"מיזוג אוויר",contractor:"קבלן ראשי",urgency:"גבוה",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-031",project:"משרדי טבולה",floor:"32",area:"חדר 26",room:"חדר 26",
+   desc:"חדר 26 — ניקיון לבד ניקיון מסטיק מעל פאנל, סידור רוזטה של מתז, תיקון חיבורי גרונג בפינות קונסטרוקציית תקרה, תיקון אטימות סגירת דלת, ניקיון צבע מעל דלת",
+   category:"קונסטרוקציה ותקרה",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-032",project:"משרדי טבולה",floor:"32",area:"האדלים",room:"האדלים ופון בוטים כללי",
+   desc:"האדלים ופון בוטים — ניקיון לבד, השלמת פאנלים, תיקון חיבורי גרונג בפינות קונסטרוקציית תקרה, תיקון סגירת דלת, ניקיון צבע מעל דלת, ניקיון וכיוון סף אקוסטי FTC",
+   category:"קונסטרוקציה ותקרה",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  // ── עמוד 9 ──
+  {id:"Q32-033",project:"משרדי טבולה",floor:"32",area:"קפיטריה",room:"קפיטריה",
+   desc:"קפיטריה — תיקוני צבע על צנרת מיזוג אוויר",
+   category:"מיזוג אוויר",contractor:"קבלן ראשי",urgency:"נמוך",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-034",project:"משרדי טבולה",floor:"32",area:"כללי",room:"שולחנות, תעלות והציוד",
+   desc:"כללי — ניקיון אבק מכל השולחנות, התעלות והציוד",
+   category:"ניקיון וסיום",contractor:"קבלן ראשי",urgency:"נמוך",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-035",project:"משרדי טבולה",floor:"32",area:"חדר 22",room:"חדר 22",
+   desc:"חדר 22 — ניקיון לבד ניקיון מסטיק מעל פאנל, תיקון חיבורי גרונג בפינות קונסטרוקציית תקרה, תיקון אטימות סגירת דלת, השלמת צבע וניקיון מעל דלת",
+   category:"קונסטרוקציה ותקרה",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-036",project:"משרדי טבולה",floor:"32",area:"אזור ארונות",room:"אזור נישת ארונות",
+   desc:"אזור נישת ארונות — להכניס צנרת וכבילת תקשורת לתוך תעלה קשיחה",
+   category:"חשמל ותקשורת",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  // ── עמוד 10 ──
+  {id:"Q32-037",project:"משרדי טבולה",floor:"32",area:"כללי",room:"פירוק מסלולים",
+   desc:"פירוק מסלולים — פירוק מסלולים ישנים שלא בשימוש",
+   category:"חשמל ותקשורת",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-038",project:"משרדי טבולה",floor:"32",area:"חדר תקשורת",room:"חדר תקשורת",
+   desc:"חדר תקשורת — יחידות מיזוג אוויר והתקנת מגשים לניקוז",
+   category:"מיזוג אוויר",contractor:"קבלן ראשי",urgency:"גבוה",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-039",project:"משרדי טבולה",floor:"32",area:"כללי",room:"קיר גבס",
+   desc:"פירוק בורג מהקיר ובתיקון שפכטל וגבס",
+   category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"נמוך",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-040",project:"משרדי טבולה",floor:"32",area:"כללי",room:"ארונות לוחות",
+   desc:"כללי — ארונות לוחות בקרי צלונים — יש לסגור דלת ולצבוע, לסדר צנרת לכבילה או לסגור בתעלה צבועה",
+   category:"חשמל ותקשורת",contractor:"קבלן ראשי",urgency:"גבוה",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  // ── עמוד 11 ──
+  {id:"Q32-041",project:"משרדי טבולה",floor:"32",area:"כללי",room:"יחידות מיזוג",
+   desc:"השלמת פילטרים בכל יחידות המיזוג, סגירת קופסאות חשמל ושילוט ומספור של כל יחידה",
+   category:"מיזוג אוויר",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-042",project:"משרדי טבולה",floor:"32",area:"כללי",room:"טפטים כללי",
+   desc:"טפטים כללי — שיפור התקנה וניראות בכל האזורים",
+   category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-043",project:"משרדי טבולה",floor:"32",area:"האדל 21",room:"כניסה להאדל 21",
+   desc:"כניסה להאדל 21 — תיקון שפכטל וצבע על קיר גבס",
+   category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-044",project:"משרדי טבולה",floor:"32",area:"האדל 19",room:"האדל 19",
+   desc:"האדל 19 — תיקון שפכטל וצבע חוץ, בחיבור לקיר גרעין והחלפת אריח שטיח עם צבע",
+   category:"ריצוף / אריחים",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  // ── עמוד 12 ──
+  {id:"Q32-045",project:"משרדי טבולה",floor:"32",area:"כללי",room:"השלמת בידוד",
+   desc:"השלמת בידוד וצבע על צנרות",
+   category:"מיזוג אוויר",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-046",project:"משרדי טבולה",floor:"32",area:"מחוץ להאדל 19",room:"מחוץ להאדל 19",
+   desc:"מחוץ להאדל 19 — תיקון חורים בתקרה",
+   category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-047",project:"משרדי טבולה",floor:"32",area:"שכונה כחולה",room:"שכונה כחולה אפורה",
+   desc:"שכונה כחולה צד שמאל מול המעבר — פירוק אביזרים מהתקרה, בדיקה לגבי אוויר חוזר, תיקון שפכטל וצבע מתחת לתקרה",
+   category:"מיזוג אוויר",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-048",project:"משרדי טבולה",floor:"32",area:"שכונה אפורה",room:"שכונה אפורה קיר רחוק",
+   desc:"שכונה אפורה — קיר רחוק מול האדל 19 — תיקון צב בין קיר לתקרה + פירוק שלה",
+   category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  // ── עמוד 13 ──
+  {id:"Q32-049",project:"משרדי טבולה",floor:"32",area:"פון בוט 18",room:"פון בוט 18",
+   desc:"פון בוט 18 — החלפת אריח תקרה שבור, סידור מגשים תיקון צבע שחור מעל דלת וניקיון צבע מאלומיניום, ניקיון וכיוון סף אקוסטי והשלמת גומיות וסגירה אטומה",
+   category:"קונסטרוקציה ותקרה",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-050",project:"משרדי טבולה",floor:"32",area:"האדל 17",room:"האדל 17",
+   desc:"האדל 17 — השלמת פאנל עד ארונית, ניקיון, השלמת צבע מעל דלת (פנים), תיקון פינת קונסטרוקציית תקרה, ניקיון וכיוון סף אקוסטי, טיפול באטימת דלת+ תיקון שפכטל וצבע גבס חיצוני מעל התא",
+   category:"קונסטרוקציה ותקרה",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-051",project:"משרדי טבולה",floor:"32",area:"האדל 15",room:"האדל 15",
+   desc:"האדל 15 — תיקוני שפכטל וצבע, ניקיון לבד, סידור גלאי תנועה, ניקיון וכיוון סף אקוסטי, סגירה אטומה לדלת, תיקון צבע פנים מעל דלת, ניקיון כללי",
+   category:"קונסטרוקציה ותקרה",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-052",project:"משרדי טבולה",floor:"32",area:"אזור 12",room:"אזור 12",
+   desc:"אזור 12 — תיקוני צבע קלים סביב נגרות + פנים נישה, ניקיון יסוד, פירוק מסלול ושיפור גמר",
+   category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  // ── עמוד 14 ──
+  {id:"Q32-053",project:"משרדי טבולה",floor:"32",area:"פון בוט 17",room:"פון בוט 17",
+   desc:"פון בוט 17 — הדבקת פאנל, תיקון צבע והשלמת ניקיון ארונית, כיוון ארונית, השלמת גומיות ואטימה סביב הדלת",
+   category:"קונסטרוקציה ותקרה",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-054",project:"משרדי טבולה",floor:"32",area:"האדל 16",room:"מול האדל 16",
+   desc:"מול האדל 16 — הסתרת צנרת וכבילה כולל צביעה / החלפה לשחור",
+   category:"חשמל ותקשורת",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-055",project:"משרדי טבולה",floor:"32",area:"שכונה צהובה",room:"שכונה צהובה",
+   desc:"שכונה צהובה — חיבור שטוצר לגריל תקרתי",
+   category:"מיזוג אוויר",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  // ── עמוד 15 ──
+  {id:"Q32-056",project:"משרדי טבולה",floor:"32",area:"שכונה צהובה",room:"שכונה צהובה פינה",
+   desc:"שכונה צהובה פינה — מבנה פילוס גוף תאורה וסגירת ארון בקרים",
+   category:"חשמל ותקשורת",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-057",project:"משרדי טבולה",floor:"32",area:"שכונה צהובה",room:"שכונה צהובה פינה מבנה",
+   desc:"שכונה צהובה פינה מבנה — סידור פרופיל תקרה והסרת אזיקונים",
+   category:"קונסטרוקציה ותקרה",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-058",project:"משרדי טבולה",floor:"32",area:"תחזית מערבית",room:"תחזית מערבית",
+   desc:"תחזית מערבית — השלמת צבע על אריחי תקרה",
+   category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-059",project:"משרדי טבולה",floor:"32",area:"עמוד חיית מערבית",room:"עמוד חיית מערבית",
+   desc:"עמוד חיית מערבית — תיקון הדבקת טפט וסגירת גבס ליד תעלה צמוד לקיר מסך",
+   category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  // ── עמוד 16 ──
+  {id:"Q32-060",project:"משרדי טבולה",floor:"32",area:"חזית מערבית",room:"בדיקת פיזור מיזוג",
+   desc:"חזית מערבית — בדיקת פיזור מיזוג אוויר",
+   category:"מיזוג אוויר",contractor:"קבלן ראשי",urgency:"גבוה",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-061",project:"משרדי טבולה",floor:"32",area:"חזית מערבית",room:"ארון בקרים חזית מערבית",
+   desc:"חזית מערבית — סגירת ארון בקרים, תיקון תעלה, כיסוי צנרת וצבע, פירוק זווית מקורת בטון",
+   category:"חשמל ותקשורת",contractor:"קבלן ראשי",urgency:"גבוה",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-062",project:"משרדי טבולה",floor:"32",area:"חזית מערבית",room:"תקרת מאסטר B חזית מערבית",
+   desc:"חזית מערבית — תיקון חורים בתקרת מאסטר B",
+   category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-063",project:"משרדי טבולה",floor:"32",area:"עמוד חיית מערבית",room:"עמוד חיית מערבית ליד קיר מסך",
+   desc:"עמוד חיית מערבית ליד קיר מסך — תיקון שפכטל וצבע וחיבור לקיר מסך, תיקון צבע על תעלה פה צמוד לקיר מסך, נגיעת צבע על קורת בטון, סגירת צנרת יציאה מהקיר וחיתוך אזיקונים",
+   category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  // ── עמוד 17 ──
+  {id:"Q32-064",project:"משרדי טבולה",floor:"32",area:"שכונה מערבית",room:"גב זכוכיות שכונה מערבית",
+   desc:"גב זכוכיות שכונה מערבית — תיקוני שפכטל על עמודונים שמפרידים ביניהן",
+   category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-065",project:"משרדי טבולה",floor:"32",area:"יציאה משנית",room:"יציאה משנית",
+   desc:"יציאה משנית — תיקוני שפכטל בצבע וניקיון מעל פאנל",
+   category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"נמוך",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-066",project:"משרדי טבולה",floor:"32",area:"נישת מדפסות",room:"נישת מדפסות",
+   desc:"נישת מדפסות — תיקוני שפכטל וצבע כולל סגירה מעל פאנל וניקיון",
+   category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"נמוך",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-067",project:"משרדי טבולה",floor:"32",area:"חדר שלוש",room:"חדר שלוש",
+   desc:"חדר שלוש — סידור אביזרים בחלק קבוע",
+   category:"נגרות ומטבח",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  // ── עמוד 18 ──
+  {id:"Q32-068",project:"משרדי טבולה",floor:"32",area:"חדר שלוש",room:"חדר שלוש",
+   desc:"חדר שלוש — החלפת אריח לבד פגום והחלפת חיפוי קיר, החלפת חיפוי קיר שיסתיר את החיפוי קופינג",
+   category:"ריצוף / אריחים",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-069",project:"משרדי טבולה",floor:"32",area:"חדר 5",room:"חדר 5",
+   desc:"חדר 5 — החלפת אריחי לבד פגומים, החלפת חיפוי קפינג לחיפוי קיר, החלפת אריחי תקרה פגומים, תיקון והשלמת סטופר לדלת",
+   category:"ריצוף / אריחים",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-070",project:"משרדי טבולה",floor:"32",area:"חדר 3",room:"חדר 3",
+   desc:"חדר 3 — החלפת אריחי תקרה פגומים",
+   category:"קונסטרוקציה ותקרה",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-071",project:"משרדי טבולה",floor:"32",area:"חדר 4",room:"חדר 4",
+   desc:"חדר 4 — החלפת/ניקיון אריח לבד מלוכלך שינוי חיפוי קיר עם קופינג, החלפת אריחי תקרה פגומים",
+   category:"ריצוף / אריחים",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  // ── עמוד 19 ──
+  {id:"Q32-072",project:"משרדי טבולה",floor:"32",area:"חדר חמש",room:"חדר חמש",
+   desc:"חדר חמש — סידור אביזרי חשמל ומיזוג בחלק קבוע",
+   category:"חשמל ותקשורת",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-073",project:"משרדי טבולה",floor:"32",area:"האדל 12",room:"האדל 12",
+   desc:"האדל 12 — החלפת קונסטרוקציית תקרה, תיקון צבע לעמודי דלת וצבע חוץ מקונסטרוקציית תקרה, ניקיון צבע מעל דלת פנים וניקיון צבע אלומיניום פנים",
+   category:"קונסטרוקציה ותקרה",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-074",project:"משרדי טבולה",floor:"32",area:"האדל 12",room:"האדל 12 סגירת חור",
+   desc:"האדל 12 — סגירת חור ליד מתג תאורה, ניקיון צבע ועל לבד מחשמאל לארונית לטמא טיפול, ניקיון צבע לבד ועל לבד, ניקיון ממשמאל לבד, להחליף אריח לבד פגום לארונית, לנקות טיפול לבינינה תקרה ימין פנים",
+   category:"קונסטרוקציה ותקרה",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-075",project:"משרדי טבולה",floor:"32",area:"האדל 9",room:"האדל 9",
+   desc:"האדל 9 — ניקיון חיפוי לבד, סידור כל ארבע פינות קונסטרוקציית תקרה, ניקיון ארונית ניקיון צבע ע גוף תאורה לא מתחלף לכחול",
+   category:"קונסטרוקציה ותקרה",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  // ── עמוד 20 ──
+  {id:"Q32-076",project:"משרדי טבולה",floor:"32",area:"האדל 7",room:"האדל 7",
+   desc:"האדל 7 — תיקון סגירת קונסטרוקציית תקרה, כיוון גלאי תנועה למשך זמן ארוך יותר, ניקיון בתוך ארונית",
+   category:"קונסטרוקציה ותקרה",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-077",project:"משרדי טבולה",floor:"32",area:"האדל 8",room:"האדל 8",
+   desc:"האדל 8 — ניקיון לבד ניקיון תיקון קונסטרוקציית תקרה, סידור אריחים, סידור גלאי תנועה ניקיון סף אקוסטי",
+   category:"קונסטרוקציה ותקרה",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-078",project:"משרדי טבולה",floor:"32",area:"האדל 6",room:"האדל 6",
+   desc:"האדל 6 — ניקיון לבד, סידור סגירת פינות קונסטרוקציית תקרה, כיוון נעילת דלת וניקיון צבע מעל דלת",
+   category:"קונסטרוקציה ותקרה",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-079",project:"משרדי טבולה",floor:"32",area:"כללי",room:"הזנת חשמל ותקשורת",
+   desc:"הזנת חשמל ותקשורת צמוד לחדר 2 — להשלים תעלת דריכה ולסדר כבילה לאחר מיקום השולחנות במדויק שלהם",
+   category:"חשמל ותקשורת",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  // ── עמוד 21 ──
+  {id:"Q32-080",project:"משרדי טבולה",floor:"32",area:"חדרים 1-2",room:"סגירה בין חדר 1 ל-2",
+   desc:"סגירה בין חדר 1 ל-2 — מילוי צמר אקוסטי לפני סגירה",
+   category:"בידוד אקוסטי",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-081",project:"משרדי טבולה",floor:"32",area:"האדל 6",room:"האדל 6",
+   desc:"האדל 6 — ניקיון לבד, סידור סגירת פינות קונסטרוקציית תקרה, כיוון נעילת דלת וניקיון צבע מעל דלת",
+   category:"קונסטרוקציה ותקרה",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-082",project:"משרדי טבולה",floor:"32",area:"חדר 2",room:"חדר 2",
+   desc:"חדר 2 — ניקיון אריחי לבד, תיקון חיבורי קונסטרוקציית תקרה, ניקיון שאריות שפכטל וצבע בחיבור עמוד וגרפיקה לקירות ותקרה",
+   category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-083",project:"משרדי טבולה",floor:"32",area:"שכונה סגולה צפון",room:"שכונה סגולה צפון",
+   desc:"שכונה סגולה צפון — סגירת לוח בקרים וטיפול במעבר צנרת כולל צבע תקרה וסגירת חיפוי גבס",
+   category:"חשמל ותקשורת",contractor:"קבלן ראשי",urgency:"גבוה",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  // ── עמוד 22 ──
+  {id:"Q32-084",project:"משרדי טבולה",floor:"32",area:"חדר 2",room:"חדר 2 חיבורי קונסטרוקציה",
+   desc:"חדר 2 — תיקון חיבורי קונסטרוקציית תקרה, ניקיון שאריות שפכטל וצבע סביב לצנרת ובחיבור עמוד וגרפיקה לקירות ותקרה",
+   category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-085",project:"משרדי טבולה",floor:"32",area:"קיר בין חדר 1 לאופן",room:"קיר בין חדר 1 לאופן",
+   desc:"קיר בין חדר 1 לאופן ספייס — תיקוני שפכטל וצבע כולל מסביב לצנרת מיזוג אוויר ובחיבור לקיר מסך וניקיון מסטיק מעל פאנל",
+   category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-086",project:"משרדי טבולה",floor:"32",area:"שכונה סגולה צפון",room:"שכונה סגולה צפון",
+   desc:"שכונה סגולה צפון — סגירת לוח בקרים וטיפול במעבר צנרת כולל צבע תקרה וסגירת חיפוי גבס",
+   category:"חשמל ותקשורת",contractor:"קבלן ראשי",urgency:"גבוה",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-087",project:"משרדי טבולה",floor:"32",area:"האדל 6",room:"האדל 6 יציאת צנרת",
+   desc:"האדל 6 — תיקון יציאת צנרת מהקיר יציאה, תיקון מהקיר כולל שפכטל וצבע והסתרה",
+   category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  // ── עמוד 23 ──
+  {id:"Q32-088",project:"משרדי טבולה",floor:"32",area:"חדר 1",room:"חדר 1",
+   desc:"חדר 1 — תיקוני שפכטל וצבע סידור חיבורי קונסטרוקציית תקרה, סידור אריחים מסומן, תיקון בתקרה, ניקיון/החלפת אריחי לבד מסומן, סגירת אריחי לבד בד, סגירת אריחי אלומיניום מעל דלת",
+   category:"קונסטרוקציה ותקרה",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-089",project:"משרדי טבולה",floor:"32",area:"שכונה סגולה פינה צפונית",room:"שכונה סגולה פינה צפונית",
+   desc:"שכונה סגולה פינה אחרונה צפונית — תיקוני שפכטל וצבע על סוף קורת בטון, תיקון צבע על תעלה פה צמוד לקיר מסך, נגיעת חלון קיר מסך, גיעת חלון קיר, נגיעת דלת ופח צמוד ברצפה",
+   category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-090",project:"משרדי טבולה",floor:"32",area:"שכונה סגולה צפון",room:"שכונה סגולה צפון השלמת צב",
+   desc:"שכונה סגולה צפון — השלמת צבע על קורת בטון בסיון חורים במאסטר ב׳ וחיתוך אזיקונים",
+   category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-091",project:"משרדי טבולה",floor:"32",area:"שכונה סגולה",room:"שכונה סגולה עמדה אחרונה",
+   desc:"שכונה סגולה — עמדה אחרונה בפינה — תיקון שפכטל וצבע בחיבור לקיר מסך, ניקיון פנל וניקיון מאחורי עמדה תחתון מאחורי העמדה",
+   category:"גבס וצבע",contractor:"קבלן ראשי",urgency:"בינוני",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  // ── עמוד 24 ──
+  {id:"Q32-092",project:"משרדי טבולה",floor:"32",area:"שכונה סגולה צפון",room:"שכונה סגולה צפון",
+   desc:"שכונה סגולה צפון — סגירת לוח בקרים וטיפול במעבר צנרת כולל צבע תקרה וסגירת חיפוי גבס",
+   category:"חשמל ותקשורת",contractor:"קבלן ראשי",urgency:"גבוה",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+
+  {id:"Q32-093",project:"משרדי טבולה",floor:"32",area:"חדר רב תכליתי",room:"החלפת חלון שבור",
+   desc:"החלפת חלון שבור בחדר רב תכליתי",
+   category:"אלומיניום / חלונות",contractor:"קבלן ראשי",urgency:"גבוה",
+   status:"נשלח לטיפול",created:"2026-03-15",deadline:"",photos:[],log:[]},
+// ── עמוד 1 ──
   {
     id:"Q33-001", project:"משרדי טבולה", floor:"33",
     area:"כניסה", room:"דלת כניסה",
@@ -530,72 +1129,37 @@ const DEFECTS = [
   }
 ];
 
-// ── Render table ──
 window.addEventListener("DOMContentLoaded", () => {
-  const urgCount = { גבוה:0, בינוני:0, נמוך:0 };
+  const urgCount = {גבוה:0,בינוני:0,נמוך:0};
   DEFECTS.forEach(d => urgCount[d.urgency]++);
-
   document.getElementById("statTotal").textContent = DEFECTS.length;
   document.getElementById("statHigh").textContent  = urgCount["גבוה"];
   document.getElementById("statMid").textContent   = urgCount["בינוני"];
   document.getElementById("statLow").textContent   = urgCount["נמוך"];
-
   const tbody = document.getElementById("tbody");
-  DEFECTS.forEach((d, i) => {
-    const cls = d.urgency === "גבוה" ? "badge-high" : d.urgency === "בינוני" ? "badge-mid" : "badge-low";
+  DEFECTS.forEach((d,i) => {
+    const cls = d.urgency==="גבוה"?"badge-high":d.urgency==="בינוני"?"badge-mid":"badge-low";
     const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td style="color:#94a3b8;font-size:11px">${i+1}</td>
-      <td style="font-family:monospace;font-size:12px;white-space:nowrap">${d.id}</td>
-      <td>${d.area}</td>
-      <td>${d.room}</td>
-      <td style="max-width:300px;font-size:12px;line-height:1.5">${d.desc}</td>
-      <td style="font-size:12px;white-space:nowrap">${d.category}</td>
-      <td><span class="badge ${cls}">${d.urgency}</span></td>
-      <td style="font-size:12px;color:#64748b">${d.status}</td>
-    `;
+    tr.innerHTML = `<td style="color:#94a3b8;font-size:11px">${i+1}</td><td style="font-family:monospace;font-size:12px;white-space:nowrap">${d.id}</td><td>${d.area}</td><td>${d.room}</td><td style="max-width:300px;font-size:12px;line-height:1.5">${d.desc}</td><td style="font-size:12px">${d.category}</td><td><span class="badge ${cls}">${d.urgency}</span></td>`;
     tbody.appendChild(tr);
   });
 });
 
-// ── Import to localStorage (merge with existing pl_d) ──
 function importToApp() {
   try {
     const existing = JSON.parse(localStorage.getItem("pl_d") || "[]");
     const existingIds = new Set(existing.map(d => d.id));
     const newItems = DEFECTS.filter(d => !existingIds.has(d.id));
-
-    if (newItems.length === 0) {
-      showMsg("⚠️ כל הליקויים כבר קיימים באפליקציה — לא נוספו רשומות חדשות.", "err");
-      return;
-    }
-
-    const merged = [...existing, ...newItems];
-    localStorage.setItem("pl_d", JSON.stringify(merged));
-    showMsg(`✅ יובאו בהצלחה ${newItems.length} ליקויים חדשים! סה״כ באפליקציה: ${merged.length} ליקויים. כעת עבור לאפליקציה.`, "ok");
-  } catch(e) {
-    showMsg("❌ שגיאה בייבוא: " + e.message, "err");
-  }
+    if (!newItems.length) { showMsg("⚠️ כל הליקויים כבר קיימים", "err"); return; }
+    localStorage.setItem("pl_d", JSON.stringify([...existing, ...newItems]));
+    showMsg(`✅ יובאו ${newItems.length} ליקויים! סה״כ: ${existing.length + newItems.length}`, "ok");
+  } catch(e) { showMsg("❌ שגיאה: " + e.message, "err"); }
 }
-
-// ── Download JSON ──
 function downloadJSON() {
-  const blob = new Blob([JSON.stringify(DEFECTS, null, 2)], { type:"application/json" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "taboola_floor33_Q33.json";
-  a.click();
-  URL.revokeObjectURL(url);
+  const blob = new Blob([JSON.stringify(DEFECTS,null,2)],{type:"application/json"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="taboola_floor31_Q31.json";a.click();
 }
-
-function showMsg(text, type) {
-  const el = document.getElementById("msg");
-  el.textContent = text;
-  el.className = "msg " + type;
-  el.style.display = "block";
-  setTimeout(() => el.style.display = "none", 7000);
-}
+function showMsg(text,type){const el=document.getElementById("msg");el.textContent=text;el.className="msg "+type;el.style.display="block";setTimeout(()=>el.style.display="none",7000);}
 </script>
 </body>
 </html>

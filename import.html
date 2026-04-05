@@ -1150,10 +1150,35 @@ function importToApp() {
     const existing = JSON.parse(localStorage.getItem("pl_d") || "[]");
     const existingIds = new Set(existing.map(d => d.id));
     const newItems = DEFECTS.filter(d => !existingIds.has(d.id));
-    if (!newItems.length) { showMsg("⚠️ כל הליקויים כבר קיימים", "err"); return; }
-    localStorage.setItem("pl_d", JSON.stringify([...existing, ...newItems]));
-    showMsg(`✅ יובאו ${newItems.length} ליקויים! סה״כ: ${existing.length + newItems.length}`, "ok");
+    if (!newItems.length) { showMsg("⚠️ כל הליקויים כבר קיימים באפליקציה", "err"); return; }
+    const merged = [...existing, ...newItems];
+    // Save to localStorage
+    localStorage.setItem("pl_d", JSON.stringify(merged));
+    // Save to Firebase so all devices sync
+    saveToFirebase(merged);
+    showMsg(`✅ יובאו ${newItems.length} ליקויים! סה״כ: ${merged.length} — נשמר לכל המכשירים`, "ok");
   } catch(e) { showMsg("❌ שגיאה: " + e.message, "err"); }
+}
+
+function saveToFirebase(defects) {
+  try {
+    import("https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js").then(({initializeApp}) => {
+      import("https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js").then(({getDatabase, ref, set}) => {
+        const app = initializeApp({
+          apiKey: "AIzaSyCCE97KG3rUzvT3dYKuRPk0Fxdaaz-L4Gg",
+          authDomain: "taboola--31-33.firebaseapp.com",
+          databaseURL: "https://taboola--31-33-default-rtdb.europe-west1.firebasedatabase.app"
+        }, "import-app");
+        const db = getDatabase(app);
+        set(ref(db, "defects"), defects)
+          .then(() => showMsg(`✅ יובאו בהצלחה ${defects.length} ליקויים — מסונכרן לכל המכשירים! 🎉`, "ok"))
+          .catch(e => showMsg(`✅ נשמר מקומית (${defects.length} ליקויים) — סנכרון Firebase נכשל`, "ok"));
+      });
+    });
+  } catch(e) {
+    // Firebase failed but localStorage already saved — still ok
+    console.log("Firebase sync failed:", e);
+  }
 }
 function downloadJSON() {
   const blob = new Blob([JSON.stringify(DEFECTS,null,2)],{type:"application/json"});

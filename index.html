@@ -404,8 +404,13 @@ window.FB = {
 window.addEventListener('DOMContentLoaded', function() {
   setTimeout(function() {
     window.FB.listenDefects(function(defects) {
-      // Update localStorage
-      localStorage.setItem('pl_d', JSON.stringify(defects));
+      // Only update from Firebase if it has real data (more than 3 items = not just samples)
+      if (!defects || !Array.isArray(defects) || defects.length <= 3) return;
+      const local = JSON.parse(localStorage.getItem('pl_d') || '[]');
+      // Only overwrite local if Firebase has MORE or EQUAL data
+      if (defects.length >= local.length) {
+        localStorage.setItem('pl_d', JSON.stringify(defects));
+      }
       // Re-render if app is loaded
       if (typeof renderList === 'function') {
         renderList();
@@ -870,13 +875,6 @@ function saveCtx(){
   toast('✅ '+[p,f,a].filter(Boolean).join(' · ')+' — מוכן לסיור!');
 }
 
-// OPEN PHOTO BY INDEX (avoids base64 in onclick attribute)
-function openCardPhoto(defectId, photoIndex) {
-  const d = LS.defects().find(x => x.id === defectId);
-  if (!d || !d.photos || !d.photos[photoIndex]) return;
-  openLB(d.photos[photoIndex].data);
-}
-
 // QUICK SAVE
 function quickSave(){
   const room=document.getElementById('qRoom').value.trim();
@@ -888,11 +886,7 @@ function quickSave(){
   if(!desc){document.getElementById('qDesc').focus();toast('❗ הכנס תיאור','w');return}
   const defects=LS.defects();
   const id='#'+String(defects.length+1).padStart(3,'0');
-  const newDef={id,project:S.ctx.project,floor:S.ctx.floor,area:S.ctx.area,room,desc,category:cat,contractor:cont,urgency:S.urgency,status:'חדש',created:today(),photos:[...S.photos.quick],log:[{date:new Date().toISOString(),by:S.user,from:'-',to:'חדש',note:''}]};
-  // Insert after last defect of same floor, or at end
-  const lastIdx=defects.map((d,i)=>d.floor===S.ctx.floor?i:-1).reduce((a,b)=>Math.max(a,b),-1);
-  if(lastIdx>=0)defects.splice(lastIdx+1,0,newDef);
-  else defects.push(newDef);
+  defects.push({id,project:S.ctx.project,floor:S.ctx.floor,area:S.ctx.area,room,desc,category:cat,contractor:cont,urgency:S.urgency,status:'חדש',created:today(),photos:[...S.photos.quick],log:[{date:new Date().toISOString(),by:S.user,from:'-',to:'חדש',note:''}]});
   // Save to autocomplete history
   saveAcHistory('room', room);
   saveAcHistory('desc', desc);
@@ -1013,55 +1007,21 @@ function renderPA(areaId,target){
   ).join('')+`<div class="phadd" onclick="openPhotoMenu('${target}')">📷<span>הוסף</span></div>`;
 }
 
-// RENDER LIST — grouped by floor
+// RENDER LIST
 function renderList(){
   let d=LS.defects();
   if(S.filter!=='all')d=d.filter(x=>x.status===S.filter);
   document.getElementById('listCnt').textContent=d.length+' ליקויים';
   const wrap=document.getElementById('listWrap');
   if(!d.length){wrap.innerHTML=`<div class="empty"><div class="ei">📋</div><h3>אין ליקויים</h3><p>הוסף ליקוי בשורת הסיור למעלה</p></div>`;return}
-  
-  // Group by floor
-  const byFloor={};
-  d.forEach(item=>{
-    const fl=item.floor||'ללא קומה';
-    if(!byFloor[fl])byFloor[fl]=[];
-    byFloor[fl].push(item);
-  });
-  
-  // Sort floors: try numeric sort, fallback to string
-  const floors=Object.keys(byFloor).sort((a,b)=>{
-    const na=parseInt(a),nb=parseInt(b);
-    if(!isNaN(na)&&!isNaN(nb))return na-nb;
-    return a.localeCompare(b,'he');
-  });
-  
-  // If only one floor — render flat (no header)
-  if(floors.length===1){
-    wrap.innerHTML=byFloor[floors[0]].map(cardHTML).join('');
-    return;
-  }
-  
-  // Multiple floors — render with section headers
-  wrap.innerHTML=floors.map(fl=>{
-    const items=byFloor[fl];
-    const openCnt=items.filter(x=>x.status!=='אושר / נסגר').length;
-    return `<div style="margin-bottom:6px">
-      <div style="display:flex;align-items:center;gap:8px;padding:7px 4px;margin-bottom:6px;border-bottom:2px solid var(--acc);position:sticky;top:0;background:var(--bg);z-index:10">
-        <span style="font-size:16px">🏛️</span>
-        <span style="font-size:15px;font-weight:800;color:var(--acc2)">${fl}</span>
-        <span style="margin-right:auto;font-size:11px;font-weight:700;background:var(--card2);border:1px solid var(--bdr);border-radius:20px;padding:2px 9px;color:var(--txt2)">${items.length} ליקויים${openCnt?` · <span style="color:var(--err)">${openCnt} פתוחים</span>`:''}</span>
-      </div>
-      ${items.map(cardHTML).join('')}
-    </div>`;
-  }).join('');
+  wrap.innerHTML=d.map(cardHTML).join('');
 }
 
 function cardHTML(d){
   const st=stInfo(d.status);
   const uc=URGC[d.urgency]||'#64748b';
   const od=d.deadline&&d.deadline<today()&&d.status!=='אושר / נסגר';
-  const thumbs=(d.photos||[]).slice(0,4).map((p,i)=>`<img class="thumb" src="${p.data}" onclick="openCardPhoto('${d.id}',${i})">`).join('');
+  const thumbs=(d.photos||[]).slice(0,4).map(p=>`<img class="thumb" src="${p.data}" onclick="openLB('${p.data}')">`).join('');
   return `<div class="dcard">
     <div class="ch" onclick="openDetail('${d.id}')">
       <span class="cnum">${d.id}</span>
@@ -1187,11 +1147,7 @@ function saveDefect(){
     if(i>-1)Object.assign(defects[i],{project:p,floor:f,area:document.getElementById('df-area').value,room:r,desc:d,category:document.getElementById('df-cat').value,urgency:document.getElementById('df-urg').value,contractor:c,foreman:document.getElementById('df-fore').value,deadline:document.getElementById('df-dead').value,inspection:document.getElementById('df-insp').value,note:document.getElementById('df-note').value,photos:S.photos.def,updatedBy:S.user,updatedAt:new Date().toISOString()});
   }else{
     const id='#'+String(defects.length+1).padStart(3,'0');
-    const newDef={id,project:p,floor:f,area:document.getElementById('df-area').value,room:r,desc:d,category:document.getElementById('df-cat').value,urgency:document.getElementById('df-urg').value,contractor:c,foreman:document.getElementById('df-fore').value,status:'חדש',created:today(),deadline:document.getElementById('df-dead').value,inspection:document.getElementById('df-insp').value,note:document.getElementById('df-note').value,photos:S.photos.def,createdBy:S.user,log:[{date:new Date().toISOString(),by:S.user,from:'-',to:'חדש',note:''}]};
-    // Insert after last defect of same floor
-    const lastIdx=defects.map((x,i)=>x.floor===f?i:-1).reduce((a,b)=>Math.max(a,b),-1);
-    if(lastIdx>=0)defects.splice(lastIdx+1,0,newDef);
-    else defects.push(newDef);
+    defects.push({id,project:p,floor:f,area:document.getElementById('df-area').value,room:r,desc:d,category:document.getElementById('df-cat').value,urgency:document.getElementById('df-urg').value,contractor:c,foreman:document.getElementById('df-fore').value,status:'חדש',created:today(),deadline:document.getElementById('df-dead').value,inspection:document.getElementById('df-insp').value,note:document.getElementById('df-note').value,photos:S.photos.def,createdBy:S.user,log:[{date:new Date().toISOString(),by:S.user,from:'-',to:'חדש',note:''}]});
   }
   LS.save(defects);S.editId=null;S.photos.def=[];
   closeOv('defModal');renderList();updateCtxBar();toast('✅ נשמר');
@@ -1237,7 +1193,7 @@ function openDetail(id){
   const d=LS.defects().find(x=>x.id===id);if(!d)return;
   const st=stInfo(d.status);
   const od=d.deadline&&d.deadline<today()&&d.status!=='אושר / נסגר';
-  const thumbs=(d.photos||[]).map((p,i)=>`<img src="${p.data}" style="width:74px;height:74px;object-fit:cover;border-radius:8px;border:2px solid var(--bdr);cursor:pointer" onclick="openCardPhoto('${d.id}',${i})">`).join('');
+  const thumbs=(d.photos||[]).map(p=>`<img src="${p.data}" style="width:74px;height:74px;object-fit:cover;border-radius:8px;border:2px solid var(--bdr);cursor:pointer" onclick="openLB('${p.data}')">`).join('');
   const log=(d.log||[]).map(l=>`<div style="padding:7px 14px;border-bottom:1px solid var(--bdr);font-size:12px"><div style="color:var(--txt2)">${(l.date||'').slice(0,16).replace('T',' ')} · ${l.by||''}</div><div><span style="color:var(--err)">${l.from||'—'}</span> → <span style="color:var(--ok)">${l.to||'—'}</span></div>${l.note?`<div style="color:var(--txt2)">${l.note}</div>`:''}</div>`).join('');
   document.getElementById('dtTitle').textContent='ליקוי '+d.id;
   document.getElementById('dtBody').innerHTML=`

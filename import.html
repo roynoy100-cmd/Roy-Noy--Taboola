@@ -3,145 +3,599 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ייבוא ריג'קטים — משרדי טבולה כל הקומות</title>
-<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<title>ייבוא ריג'קטים — משרדי טבולה קומה 33</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:Heebo,sans-serif;background:#0a1628;color:#e8f0fe;padding:16px;min-height:100vh}
-.header{background:#0f2040;border:1px solid rgba(100,160,255,0.2);border-radius:12px;padding:16px;margin-bottom:16px}
-.header h1{font-size:18px;font-weight:800;margin-bottom:4px}
-.header p{font-size:13px;color:#94a3b8}
-.stats{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:16px}
-.stat{background:#1a3360;border:1px solid rgba(100,160,255,0.2);border-radius:10px;padding:12px;text-align:center}
-.stat .n{font-size:26px;font-weight:900;color:#60a5fa}
-.stat .l{font-size:11px;color:#94a3b8;margin-top:2px}
-.filter-bar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
-.fb{padding:5px 12px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;border:1px solid rgba(100,160,255,0.3);background:#1a3360;color:#94a3b8}
-.fb.on{background:#3b82f6;border-color:#3b82f6;color:#fff}
-.defect-row{background:#1a3360;border:1px solid rgba(100,160,255,0.18);border-radius:10px;padding:10px 12px;margin-bottom:7px;display:flex;align-items:flex-start;gap:10px}
-.dr-num{font-size:11px;font-weight:700;color:#60a5fa;min-width:70px;flex-shrink:0;font-family:monospace}
-.dr-content{flex:1}
-.dr-floor{font-size:10px;color:#64748b;margin-bottom:2px}
-.dr-room{font-size:11px;color:#94a3b8;margin-bottom:3px}
-.dr-desc{font-size:13px;font-weight:600;line-height:1.4}
-.dr-check{flex-shrink:0}
-.dr-check input{width:18px;height:18px;cursor:pointer;accent-color:#3b82f6}
-.btn-bar{position:sticky;bottom:0;background:#0a1628;padding:12px 0;border-top:1px solid rgba(100,160,255,0.15)}
-.btn{width:100%;background:linear-gradient(135deg,#3b82f6,#2563eb);color:#fff;border:none;border-radius:10px;padding:14px;font-family:Heebo,sans-serif;font-size:16px;font-weight:800;cursor:pointer;margin-bottom:8px}
-.btn.sec{background:#1a3360;border:1px solid rgba(100,160,255,0.3)}
-.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(10px);background:#22c55e;color:#fff;border-radius:20px;padding:9px 18px;font-size:13px;font-weight:700;opacity:0;transition:all 0.25s;white-space:nowrap;z-index:999}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-.sel-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:12px;color:#94a3b8}
-.sel-bar a{color:#60a5fa;cursor:pointer;font-weight:700}
-.new-badge{background:rgba(34,197,94,0.2);color:#22c55e;border:1px solid rgba(34,197,94,0.3);border-radius:10px;padding:2px 7px;font-size:10px;font-weight:700;margin-right:4px}
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f1f5f9; color: #1e293b; direction: rtl; }
+  header { background: linear-gradient(135deg, #1e3a5f, #2563eb); color: white; padding: 24px 32px; }
+  header h1 { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+  header p { font-size: 13px; opacity: 0.85; }
+  .stats { display: flex; gap: 16px; padding: 20px 32px; flex-wrap: wrap; }
+  .stat-card { background: white; border-radius: 10px; padding: 16px 24px; flex: 1; min-width: 140px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); text-align: center; }
+  .stat-card .num { font-size: 32px; font-weight: 800; }
+  .stat-card .label { font-size: 12px; color: #64748b; margin-top: 4px; }
+  .stat-card.total .num { color: #2563eb; }
+  .stat-card.high .num { color: #dc2626; }
+  .stat-card.mid .num { color: #d97706; }
+  .stat-card.low .num { color: #16a34a; }
+  .actions { padding: 0 32px 16px; display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn { border: none; padding: 12px 28px; border-radius: 8px; font-size: 15px; cursor: pointer; font-weight: 600; }
+  .btn-primary { background: #2563eb; color: white; }
+  .btn-primary:hover { background: #1d4ed8; }
+  .btn-success { background: #16a34a; color: white; }
+  .btn-success:hover { background: #15803d; }
+  .msg { margin: 0 32px 16px; padding: 14px 18px; border-radius: 8px; font-weight: 600; display: none; }
+  .msg.ok { background: #dcfce7; color: #166534; border: 1px solid #86efac; }
+  .msg.err { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+  .table-wrap { padding: 0 32px 32px; overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.08); font-size: 13px; }
+  th { background: #1e3a5f; color: white; padding: 12px 10px; text-align: right; font-weight: 600; }
+  td { padding: 10px; border-bottom: 1px solid #e2e8f0; vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #f8fafc; }
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 700; }
+  .badge-high { background: #fee2e2; color: #dc2626; }
+  .badge-mid  { background: #fef9c3; color: #b45309; }
+  .badge-low  { background: #dcfce7; color: #16a34a; }
 </style>
 </head>
 <body>
-<div class="header">
-  <h1>📥 ייבוא ריג'קטים — משרדי טבולה</h1>
-  <p>כל הקומות — 31, 32, 33</p>
-</div>
+
+<header>
+  <h1>📋 ייבוא ריג'קטים — משרדי טבולה קומה 33</h1>
+  <p>מגדל אמות אטריום · תאריך סיור: 15.03.2026 · PunchList Pro Import File</p>
+</header>
 
 <div class="stats">
-  <div class="stat"><div class="n">122</div><div class="l">קומה 31</div></div>
-  <div class="stat"><div class="n">83</div><div class="l">קומה 32</div></div>
-  <div class="stat"><div class="n">59</div><div class="l">קומה 33 ✨</div></div>
-  <div class="stat"><div class="n" id="selCount">264</div><div class="l">נבחרו</div></div>
+  <div class="stat-card total"><div class="num" id="statTotal">—</div><div class="label">סה״כ ליקויים</div></div>
+  <div class="stat-card high"><div class="num" id="statHigh">—</div><div class="label">🔴 דחיפות גבוהה</div></div>
+  <div class="stat-card mid"><div class="num" id="statMid">—</div><div class="label">🟡 דחיפות בינונית</div></div>
+  <div class="stat-card low"><div class="num" id="statLow">—</div><div class="label">🟢 דחיפות נמוכה</div></div>
 </div>
 
-<div class="filter-bar">
-  <div class="fb on" onclick="filterFloor('all',this)">הכל (264)</div>
-  <div class="fb" onclick="filterFloor('31',this)">קומה 31 (122)</div>
-  <div class="fb" onclick="filterFloor('32',this)">קומה 32 (83)</div>
-  <div class="fb" onclick="filterFloor('33',this)">קומה 33 ✨ (59)</div>
+<div class="actions">
+  <button class="btn btn-success" onclick="importToApp()">✅ ייבא לאפליקציה (הוסף ל-localStorage)</button>
+  <button class="btn btn-primary" onclick="downloadJSON()">⬇️ הורד JSON</button>
 </div>
+<div class="msg" id="msg"></div>
 
-<div class="sel-bar">
-  <span id="selLabel">264 ליקויים נבחרו</span>
-  <span><a onclick="selAll(true)">בחר הכל</a> · <a onclick="selAll(false)">נקה הכל</a></span>
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>#</th><th>מזהה</th><th>אזור</th><th>חדר / מיקום</th><th>תיאור הליקוי</th><th>קטגוריה</th><th>דחיפות</th><th>סטטוס</th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
 </div>
-
-<div id="list"></div>
-
-<div class="btn-bar">
-  <button class="btn" onclick="importSelected()">✅ ייבא לאפליקציה</button>
-  <button class="btn sec" onclick="window.location.href='index.html'">← חזור לאפליקציה</button>
-</div>
-
-<div class="toast" id="toast"></div>
 
 <script>
-const DATA = [{"id": "Q31-001", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "כניסה ראשית", "desc": "התקנת אביזר מערכת בקרת כניסה", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-002", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "כניסה ראשית", "desc": "תיקון יישום שטיחים בחיבור לריצוף מול הכניסה הראשית", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-003", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "חדר 26", "desc": "תיקון וכיסוי מעבר צנרת בתקרה", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-004", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "חדר 26", "desc": "ניקיון או החלפת חיפוי לבד מלוכלך", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-005", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "חדר 26", "desc": "הדבקת לעמוד פאנל", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-006", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "חדר 26", "desc": "תיקון שפכטל וצבע", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-007", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "חדר 26", "desc": "תיקון הדבקת טפטים על הקיר מעל פאנל", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-008", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "חדר 26", "desc": "תיקון טפט בחיבורים", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-009", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "חדר 26", "desc": "תיקון צבע וכיפוף תעלה לחיבור לקיר מסך", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-010", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "חדר 26", "desc": "תיקון שפכטל וצבע על סינר צמוד לתקרת אריחים בצד של קיר המסך", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-011", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "חדר 26", "desc": "הדבקת פינת חיפוי לבד אמצעי", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-012", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "חדר 26", "desc": "תיקון גמר עמוד ולבד", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-013", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "חדר 26", "desc": "ניקיון צבע מקונסטרוקציית תקרה", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-014", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "חדר 26", "desc": "ניקיון צבע מקונסטרוקציית מחיצת אלומיניום", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-015", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "חדר 26", "desc": "תיקון ביצוע טפט גרפיקה", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-016", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "חדר 26", "desc": "תיקון חיבור בין פאנלים מתחת לטפט גרפיקה", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-017", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "אופן ספייס", "desc": "הכנות חשמל עם צנרת שחורה או להכניס לתוך שרשורי/קוברה ולחבר/לתלות בצורה מסודרת על השולחנות", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-018", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "אופן ספייס - משמאל כניסה", "desc": "תיקון שפכטל וצבע מסביב למתזים", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-019", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "קיר פינה ליד פון בוט 27", "desc": "תיקון שפכטל וצבע", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-020", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "כל הקומות", "desc": "להחליף לגומיות עבות יותר - מניעת רעידות דלתות וביצוע בידוד אקוסטי", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-021", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "פון בוט 27", "desc": "ניקיון צבע מחיפוי לבד", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-022", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "פון בוט 27", "desc": "תיקון צבע שחור מעל דלת", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-023", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "פון בוט 27", "desc": "תיקון חיבור קונסטרוקציית תקרה", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-024", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "מול פון בוט 27", "desc": "תיקון גמר בין העמוד לקיר מסך", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-025", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "האדלמול ה - 28", "desc": "תיקון שפכטל וצבע - מול חיפוי עמוד בחיבור עם קיר מסך", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-026", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "כל הקומות", "desc": "ניקיון של כל הספים האקוסטיים בכל הדלתות בכל האזורים", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-027", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "האדל 28", "desc": "לנקות צבע שחור מקונסטרוקציית אלומיניום", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-028", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "כל האזורים", "desc": "הורדת שאריות ניילון מכל השטיחים", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-029", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "האדלה 29", "desc": "תיקון צבע שחור מסינר מעל דלת וניקיון צבע שחור מאלומיניום מעל הדלת", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-030", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "האדלה 29", "desc": "תיקון חיבור קונסטרוקציית תקרה", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-031", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "חדר 30", "desc": "תיקון טפט מעל פאנל", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-032", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "חדר 30", "desc": "תיקון מדה מתפלסת מתחת לשטיח", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-033", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "חדר 30", "desc": "תיקון שפכטל וצבע בפינה מעל חלון", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-034", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "חדר 30", "desc": "ניקיון חיפוי לבד וסגירה או החלפת אריח לבד צמוד לגבס", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-035", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "חדר 30", "desc": "תיקון מדה מתפלסת מתחת לשטיח", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-036", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "חדר 30", "desc": "ניקיון דבק מלבד חיפוי", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-037", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "חדר 30", "desc": "תיקון חיבור קונסטרוקציית תקרה", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-038", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "חדר 30", "desc": "תיקון יישום טפט גרפיקה", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-039", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "חדר 30", "desc": "תיקון חיבור קונסטרוקציית תקרה", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-040", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "חדר 30", "desc": "תיקוני צבע על הקירות", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-041", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "חדר 30", "desc": "ניקיון אלומיניום מצבע", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-042", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "חדר 30", "desc": "ביצוע הכנות למסך בקרת כניסה", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-043", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "חדר 30", "desc": "תיקוני שפכטל וצבע סביב חלון ודלת", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-044", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "מול חדר 30 - אטריום", "desc": "תיקוני צבע בין קירות לתקרה", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-045", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "מול חדר 30", "desc": "תיקוני שפכטל וצבע - חיבור חיפוי קיר בטון לקיר מסך", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-046", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "מול חדר 30", "desc": "סיום בידוד צנרת מיזוג אוויר", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-047", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "האדלמול ה 28", "desc": "להשלים ולתקן צבע - על קורת בטון ותעלות", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-048", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "האדלמול ה 28", "desc": "לסגור דלת ארון בקרים ולסדר צנרת ולצבוע", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-049", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "האדלמול ה 28", "desc": "ביצוע חשמל בצבע שחור או להכניס לתוך קוברה ולחבר בצורה מסודרת", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-050", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "חדר 26", "desc": "תיקון שטיח בכניסה", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-051", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "בין חדר 25 ל-26", "desc": "לחתוך את הבידוד האקוסטי", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-052", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "חדר 25", "desc": "תיקון גמר בין טפט לעמוד", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-053", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "חדר 25", "desc": "סגירה ותיקון גמר של מעבר צנרת", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-054", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "חדר 25", "desc": "תיקוני שפכטל וצבע בסינר ליד קיר מסך", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-055", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "חדר 25", "desc": "להוסיף בידוד אקוסטי בקונסטרוקציה - קיר הפרדה עם חדר 26", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-056", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "חדר 25", "desc": "תיקוני טפט גרפיקה", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-057", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "חדר 25", "desc": "תיקוני שפכטל וצבע", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-058", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "חדר 25", "desc": "הצמדת טרמוסטט או צביעת קופסא כתומה", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-059", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "חדר 25", "desc": "סיום תיקון שפכטל וצבע וניקיון אלומיניום", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-060", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "קפיטריה", "desc": "ביצוע הכנות וקידוחים בנגרות לצנרת מים וברזי ניל למדיח, מכונת קפה ושתי מכונות תמי 4", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-061", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "קפיטריה", "desc": "סגירת גבס בסינר והשלמת צבע מאחורי עמוד", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-062", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "קפיטריה", "desc": "השלמת תיקוני צבע", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-063", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "קפיטריה", "desc": "תיקוני צבע בין ספוג לקירות", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-064", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "מטבחון קפיטריה", "desc": "תיקון סדקים, שפכטל וצבע", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-065", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "מעל קפיטריה", "desc": "תיקון חורים בספוגים ובין הקיר לספוג", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-066", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "ארון גלגלון קפיטריה", "desc": "ניקיון, גמר צבע ושיפור מראה", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-067", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "משמאל לארון הידרנט", "desc": "תיקון שפכטל וצבע - מתז בסינר", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-068", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "ארון גלגלון", "desc": "תיקון שפכטל וצבע", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-069", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "כללי", "desc": "תוספת תאורת ספוטים מעל מטבחונים", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-070", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "האדל 23", "desc": "כל הלבד שרוט מלוכלך ופגוע - לטפל או להחליף + קונסטרוקציה תקרה + סיום צבע + השלמת ארונית + התקנת נק' חשמל + החלפת גומיות", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-071", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "האדל 22", "desc": "קונסטרוקציה תקרה - ניקוי שפכטל וצבע + ניקיון צבע שחור + השלמת פלטה + נק' חשמל ורשת + החלפת גומיות", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-072", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "האדל 21", "desc": "ניקיון חיפוי לבד מלוכלך + קונסטרוקציה תקרה + ארונית פלטה + נק' חשמל ותקשורת + החלפת גומיות", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-073", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "חדר 24", "desc": "ניקיון מסטיק מעל פאנל", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-074", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "חדר 24", "desc": "להוריד פלסטיקים ולתקן צבע", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-075", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "חדר 24", "desc": "תיקון מגנטים בתקרות וסידור מרווחים בין אריחי תקרה", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-076", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "חדר 24", "desc": "תיקון חיבור צבע בין עמוד גבס לקיר מסך", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-077", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "חדר 24", "desc": "סיום התקנת ספוטים ותיקון צבע על תקרה וסינר", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-078", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "חדר 24", "desc": "ניקיון צבע מעל אלומיניום", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-079", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "גרם מדרגות", "desc": "הוסיף פס צלירה עם שלושה ספוטים מכוונים לגרפיקה על הקיר", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-080", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "מעל ארון תקשורת", "desc": "תיקון צבע", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-081", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "אחרי נישה ארון תקשורת - שכונה כחולה אפורה", "desc": "השלמת גריל בתקרה", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-082", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "כל האזורים", "desc": "תיקון התקנת טפטים - בועות ובליטות מתחת לטפט", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-083", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "שכונה כחולה", "desc": "תיקון צבע תעלה צמוד לקיר מסך", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-084", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "שכונה כחולה", "desc": "סגירת ארון בקרים וכיסוי צנרת וצביעה", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-085", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "שכונה אפורה - האדל 20", "desc": "ניקיון קונסטרוקציית תקרה וניקיון לבד על הקיר", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-086", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "הדל 19", "desc": "ניקיון קונסטרוקציית תקרה + ניקיון צבע שחור מעל דלת + השלמת פאנל + רוזטות כיסוי לצירים", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-087", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "הדל 18", "desc": "ניקיון צבע שחור מעל דלת + השלמת פאנל פנימי + סגירה בין פרופיל ללבד", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-088", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "כללי - מדרגות", "desc": "סיום ליטוש וצבע מדרגות", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-089", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "שכונה אפורה", "desc": "בדיקת פיזור מיזוג אוויר עם יועץ המיזוג", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-090", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "סוף שכונה כחולה - משמאל", "desc": "תיקון שפכטל, צבע, צביעת צנרת ספייר בתקרה ועיגון לתעלה", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-091", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "סוף שכונה אפורה - ימין", "desc": "תיקוני חיבור צבע בין תקרת מאסטר בי לקירות ותיקון חורים", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-092", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "סוף שכונה אפורה - ימין", "desc": "תיקוני שפכטל וצבע וניקיון מסטיק לבן מפאנל שחור", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-093", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "פון בוט 17", "desc": "ניקיון צבע שחור על פרופיל אלומיניום + החלפת גומיות", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-094", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "פון בוט 16", "desc": "ניקיון צבע שחור על פרופיל אלומיניום + החלפת גומיות", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-095", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "פון בוט 15", "desc": "ניקיון צבע שחור + תיקון הדבקת פאנל + החלפת גומיות", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-096", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "מול קיר מסך מול פון בוט 17", "desc": "לטפל בתאורה", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-097", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "האדל 14 - מול קיר מסך", "desc": "לסגור ארון ולטפל בכיסוי צנרת כבילה", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-098", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "האדל 14", "desc": "ניקיון צבע מקונסטרוקציה + תוספת גוף תאורה", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-099", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "האדל 13", "desc": "לנקות קונסטרוקציית תקרה", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-100", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "פינת אופניים 12", "desc": "תיקון שפכטל בצבע מסביב לארון גלגלון + לנקות, לסדר ולצבוע פנים הארון", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-101", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "פינת שכונה צהובה", "desc": "לסגור ארון ולטפל בצנרת", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-102", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "שכונה צהובה פינת המבנה", "desc": "תיקון שפכטל וצבע בין עמוד חיפוי גבס לקיר מסך", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-103", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "חדר 1", "desc": "להצמיד טרמוסטט או לצבוע בשחור", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-104", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "חדר 1", "desc": "ניקיון צבע מקונסטרוקציית התקרה", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-105", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "חדר 1", "desc": "סידור ואישור מגשי תקרה", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-106", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "חדר 1", "desc": "ניקיון קונסטרוקציית תקרה ואלומיניום קיר מצבע + ישור פאנל", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-107", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "חדר 2", "desc": "סידור ויישור אריחי תקרה + תיקוני שפכטל + ניקיון צבע + פאנל יישור אטום", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-108", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "חדר 3", "desc": "תיקון ויישור אריחי תקרה + ניקיון קונסטרוקציית תקרה + תיקוני שפכטל וצבע", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-109", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "חדר 4", "desc": "תיקוני שפכטל וצבע + ניקיון לבד + תיקון פאנל + יישור מגשי תקרה + ניקיון אלומיניום", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-110", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "האדל 11", "desc": "ניקיון קונסטרוקציה + הדבקת גלאי + ניקיון פאנל + השלמת גומיות", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-111", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "האדל 10", "desc": "החלפת פאנלים לארוכים + ניקיון קונסטרוקציית תקרה + ניקיון צבע שחור + החלפת גומיה", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-112", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "האדל 9", "desc": "ניקיון קונסטרוקציית תקרה + ניקיון אלומיניום + החלפת גומיות", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-113", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "האדל 8", "desc": "ניקיון קונסטרוקציית תקרה + ניקיון פאנל אלומיניום + החלפת גומיות + השלמת נקודות חשמל", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-114", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "האדל 7", "desc": "ניקיון אבק ולכלוך מקונסטרוקציית תקרה + ניקיון צבע מעל דלת + החלפת גומיות + השלמת נקודות", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-115", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "האדל 6", "desc": "ניקיון אבק ולכלוך + ניקיון צבע מעל דלת + החלפת גומיות + השלמת נקודות חשמל", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-116", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "האדל 5", "desc": "ניקיון אבק ולכלוך מחיפוי לבד + ניקיון צבע + החלפת גומיות + השלמת נקודות", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-117", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "האדלים 8-11", "desc": "תיקון צבע בין תקרת מאסטר בי לסינר גבס", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-118", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "מול האדל 6", "desc": "לבצע סגירה בין קיר לבין פאנל תעלת חשמל", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-119", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "פינה סגולה - מתחת ארון בקרים", "desc": "לצבוע צנרת", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-120", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "לקראת סוף שכונה סגולה", "desc": "לפרק זווית ניצב על קורת בטון ולתקן צבע", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-121", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "סוף שכונה סגולה", "desc": "לשפר את הגמר מסביב לפלאנג' ולצבוע בצבע הקיר", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q31-122", "project": "משרדי טבולה", "floor": "קומה 31", "area": "פנים", "room": "כל מקום", "desc": "חיתוך שאריות אזיקונים", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-10", "deadline": "", "photos": [], "log": [{"date": "2026-03-10T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 10.3.2026"}]}, {"id": "Q32-001", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "אזור דיינרים", "desc": "ניקיון חריץ בין ריצוף לקיר וסגירה עם חומר", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-002", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "ארון מולטימדיה", "desc": "פתיחת פתח לאוויר צח + פירוק סף תחתון בארון", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-003", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "כניסה ראשית", "desc": "תיקוני שפכטל וצבע + ניקיון צבע מקיר מסך", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-004", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "כללי", "desc": "סגירת דלת ללוח בקרים", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-005", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "אזור מקרר", "desc": "להוסיף ברז", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-006", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "מולטימדיה - כניסה", "desc": "ביצוע סינר גבס כמו בנישת מולטימדיה", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-007", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "מדפי קפיטריה", "desc": "צביעת ברגים בשחור", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-008", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "עמוד קפיטריה", "desc": "תיקון מפגש גבס עם קיר מסך", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-009", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "כללי - מאסטר B", "desc": "סגירת חורים + תיקוני צבע בתקרה", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-010", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "חלון מילוט", "desc": "תיקון גבס והנחת פלטת עץ", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-011", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "עמודים פינתיים קפיטריה", "desc": "תיקון צבע על קורת בטון", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-012", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "קפיטריה - תקרה", "desc": "תיקון צבע ועל מגשי תקרה", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-013", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "קפיטריה", "desc": "תוספת תאורת ספוטים מעל מטבחון", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-014", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "קפיטריה", "desc": "תוספת תאורת ספוטים לתאורה", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-015", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "סינר - חיבור קיר", "desc": "תיקון צבע על סינר ובחיבור עם הקיר", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-016", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "מדפי קפיטריה", "desc": "צביעת ברגים בשחור", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-017", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "עמוד קפיטריה", "desc": "תיקון מפגש גבס עם קיר מסך", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-018", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "לאונג'", "desc": "תיקון חיבור בין פרקט לריצוף", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-019", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "קפיטריה - משמאל לארון גלגלון", "desc": "תיקון צבע", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-020", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "ביצוע ניקיון וצבע", "desc": "ביצוע ניקיון וצבע - כללי", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-021", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "תיקוני שפכטל וצבע סביב דלתות נגרות", "desc": "תיקוני שפכטל וצבע סביב דלתות נגרות", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-022", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "עמוד ליד קבלה", "desc": "תיקוני שפכטל וצבע", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-023", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "פינת גבס מול קפיטריה", "desc": "תיקון שפכטל וצבע כולל חיבור לקיר מסך ותקרה", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-024", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "תיקון שפכטל וצבע סביב מעקה", "desc": "תיקון שפכטל וצבע סביב מעקה", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-025", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "קפיטריה", "desc": "תוספת תאורת ספוטים לתאורה", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-026", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "חדר 27 - רב תכליתי", "desc": "סגירת ארון בקרים + השלמת תקרת רשת לוגו + מאור וגופי תאורה", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-027", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "חדר 27", "desc": "החלפת מגש ניקוז לייחידת מיזוג אוויר", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-028", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "חדר 26", "desc": "ניקיון לבד + תיקון מסטיק מעל פאנל + סידור רוזטה + תיקון חיבורי גרונג + קונסטרוקציית תקרה + אטימות סגירת דלת + ניקיון צבע מעל דלת", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-029", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "האדלים וופון בוטים - כולם", "desc": "ניקיון לבד + השלמת פאנלים + תיקון חיבורי גרונג + קונסטרוקציית תקרה + תיקון סגירת דלת + ניקיון צבע מעל דלת + ניקיון סף אקוסטי + צבע FTC", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-030", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "נישת לוח חשמל", "desc": "ניקיון וצבע", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-031", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "קפיטריה - צנרת מיזוג אוויר", "desc": "תיקוני צבע על צנרת מיזוג אוויר", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-032", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "כללי", "desc": "ניקיון אבק מכל השולחנות, התעלות והציוד", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-033", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "חדר 22", "desc": "ניקיון לבד + תיקון מסטיק מעל פאנל + תיקון חיבורי גרונג + קונסטרוקציית תקרה + אטימות סגירת דלת + ניקיון צבע מעל דלת", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-034", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "אזור נישת ארונות", "desc": "להכניס צנרת וכבילת תקשורת לתוך תעלה קשיחה", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-035", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "פירוק מסלולים", "desc": "פירוק מסלולים", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-036", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "חדר תקשורת", "desc": "יחידות מיזוג אוויר - והתקנת מגשים לניקוז", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-037", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "כללי - פירוק בורג מהקיר", "desc": "תיקון שפכטל וגבס", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-038", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "כללי - ארונות", "desc": "לסגור דלת בקרי צלונים + לסדר צנרת לכבילה + לסגור בתעלת פח צבועה", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-039", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "השלמת פילטרים", "desc": "השלמת פילטרים בכל יחידות המיזוג + סגירת קופסאות חשמל + שילוט ומספור של כל יחידה", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-040", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "טפטים - כללי", "desc": "שיפור התקנה ונראות בכל האזורים", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-041", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "כניסה להאדל 21", "desc": "תיקון שפכטל וצבע על קיר גבס", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-042", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "האדל 19", "desc": "תיקון שפכטל וצבע חוץ + בחיבור לקיר גרין + החלפת אריח שטיח עם צבע", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-043", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "מחוץ להאדל 19", "desc": "תיקון חורים בתקרה", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-044", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "שכונה כחולה-אפורה - צד שמאל", "desc": "פירוק אביזרים לפני המעבר + בדיקה לגבי אוויר חוזר + תיקון שפכטל וצבע מתחת לתקרה", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-045", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "שכונה אפורה - קיר רחוק מול האדל 19", "desc": "תיקון צבע בחיבור בין קיר לתקרה + פירוק שלה", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-046", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "השלמת בידוד וצבע", "desc": "השלמת בידוד וצבע - כללי", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-047", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "פון בוט 18", "desc": "החלפת אריח תקרה שבור + סידור מגשים + תיקון צבע שחור + ניקיון מאלומיניום + כיוון סף אקוסטי + סגירה אוטומטית", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-048", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "האדל 17", "desc": "השלמת פאנל עד ארונית + ניקיון צבע + השלמת ארונית + תיקון דלת (פנים) + קונסטרוקציית תקרה + ניקיון סף אקוסטי + טיפול בסינר גבס", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-049", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "האדל 15", "desc": "תיקוני שפכטל וצבע + ניקיון לבד + סידור גלאי תנועה + ניקיון וכיוון סף אקוסטי + סגירה אוטומטית לדלת + ניקיון צבע מעל דלת", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-050", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "אזור 12", "desc": "תיקוני צבע סביב נגרות קלים + פנים נישה + ניקיון יסוד + פירוק מסלול + שיפור גמר", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-051", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "האדל 12", "desc": "החלפת קונסטרוקציית תקרה + תיקון צבע + גבס בחוץ + ניקיון צבע שחור + ניקיון מאלומיניום (פנים)", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-052", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "האדל 12", "desc": "סגירת חור ליד מתג תאורה + תיקון צבע + ניקיון + החלפת אריח לבד פגום + ניקיון לבד + ניקיון לארונית + למטה טיפול לבד", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-053", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "האדל 9", "desc": "ניקיון לבד + סידור פינות קונסטרוקציית תקרה + כיוון נעילת דלת + ניקיון צבע מעל דלת", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-054", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "האדל 6", "desc": "ניקיון לבד + סידור פינות קונסטרוקציית תקרה + כיוון נעילת דלת + ניקיון וצבע מעל דלת", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-055", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "חדר 5", "desc": "סידור אביזרי חשמל ומיזוג בחלק קבוע", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-056", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "האדל 7", "desc": "תיקון קונסטרוקציית תקרה + כיוון גלאי למשך זמן יותר ארוך + ניקיון בתוך ארונית", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-057", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "האדל 8", "desc": "ניקיון לבד + תיקון קונסטרוקציית תקרה + סידור אריחים + סידור גלאי תנועה + ניקיון סף אקוסטי", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-058", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "חדר 2", "desc": "ניקיון אריחי לבד + תיקון חיבורי גרונג בקונסטרוקציית תקרה", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-059", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "שכונה סגולה צפון - פינת המבנה", "desc": "סגירת פינת קונס' + תיקון גמר סביב עמוד בחיבור לקיר מסך", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-060", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "שכונה סגולה צפון", "desc": "סגירת לוח בקרים + טיפול במעבר צנרת כולל צבע תקרה + סגירת חיפוי גבס", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-061", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "לצד האדל 6", "desc": "תיקון יציאת צנרת מהקיר כולל שפכטל וצבע והסתרה", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-062", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "חדר 1", "desc": "תיקוני שפכטל וצבע + סידור חיבור קונסטרוקציית תקרה + סידור אריחים מסומן + תיקון חורים בתקרה + ניקיון/החלפת אריחי לבד + סגירה בין חדר 1 ל-2 + מילוי צמר אקוסטי", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-063", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "שכונה סגולה פינה - אחרונה", "desc": "תיקון שפכטל וצבע על קורת בטון + תיקון צבע על תעלת פח + גנילת חלון קיר מסך + סגירת פח ברצפה", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-064", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "שכונה סגולה צפון - השלמה", "desc": "השלמת צבע על קורת בטון + סגירת חורים ב-מאסטר B + חיתוך אזיקונים", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-065", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "שכונה סגולה עמדה", "desc": "תיקון שפכטל וצבע בחיבור לקיר מסך + ניקיון פאנל מאחורי העמדה", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-066", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "שכונה סגולה - לוח שני", "desc": "סגירת לוח בקרים + טיפול במעבר צנרת כולל צבע תקרה + סגירת חיפוי גבס", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-067", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "חיזית מערבית", "desc": "השלמת צבע על אריחי תקרה", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-068", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "שכונה צהובה פינת מבנה", "desc": "פילוס גוף תאורה + סגירת ארון בקרים", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-069", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "שכונה צהובה פינת מבנה", "desc": "סידור פרופיל תקרה + הסרת אזיקונים", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-070", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "תחזית מערבית", "desc": "תיקון חורים בתקרת מאסטר B", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-071", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "עמוד חזית מערבית", "desc": "תיקון הדבקת טפט + סגירת גבס ליד תעלה + צמוד לקיר מסך", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-072", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "בדיקת פיזור מיזוג אוויר - חזית מערבית", "desc": "בדיקת פיזור מיזוג אוויר", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-073", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "חזית מערבית - ארון בקרים", "desc": "סגירת ארון בקרים + תיקון תעלה + כיסוי צנרת וצבע + פירוק זווית מקורת בטון", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-074", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "חזית מערבית - תיקון חורים מאסטר B", "desc": "תיקון חורים בתקרת מאסטר B", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-075", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "גב זכוכיות שכונה מערבית", "desc": "תיקוני שפכטל על עמודונים שמפרידים ביניהן", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-076", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "יציאה משנית", "desc": "תיקוני שפכטל וצבע + ניקיון מעל פאנל", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-077", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "פון בוט 17", "desc": "הדבקת פאנל + תיקון צבע + השלמה ארונית + כיוון סף אקוסטי + גומיות אטימה סביב הדלת", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-078", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "מול האדל 16", "desc": "הסתרת צנרת וכבילה כולל צביעה / החלפה לשחור", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-079", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "שכונה צהובה - חיבור שטוצר לגריל תקרתי", "desc": "חיבור שטוצר לגריל תקרתי", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-080", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "חדר שלוש", "desc": "סידור אביזרי חשמל ומיזוג בחלק קבוע + החלפת אריח לבד פגום + החלפת חיפוי קופינג + החלפת אריחי תקרה פגומים + תיקון התקנת סטופר לדלת", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-081", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "חדר 5", "desc": "החלפת אריח לבד פגום + החלפת גומיות חיפוי קיר + החלפת אריחי תקרה פגומים + תיקון התקנת סטופר", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-082", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "חדר 4", "desc": "החלפה/ניקיון אריח לבד מלוכלך שינוי חיפוי קיר עם קופינג + החלפת אריחי תקרה פגומים", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "Q32-083", "project": "משרדי טבולה", "floor": "קומה 32", "area": "פנים", "room": "האדל 12", "desc": "סגירת חור ליד מתג תאורה + תיקון ו/או החלפת אריח לבד פגום", "contractor": "", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-15", "deadline": "", "photos": [], "log": [{"date": "2026-03-15T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור 15.3.2026"}]}, {"id": "TAB33-001", "project": "משרדי טבולה", "floor": "קומה 33", "area": "כניסה", "room": "בקרת כניסה", "desc": "התקנת מערכת בקרת כניסה — חיווט גלוי, יש לסיים התקנה ולסדר כבלים", "contractor": "קבלן ראשי", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}, {"id": "TAB33-002", "project": "משרדי טבולה", "floor": "קומה 33", "area": "כניסה", "room": "ארון חשמל", "desc": "השלמת פנל ליד ארון חשמל — יש להשלים התקנה ולסדר אזור", "contractor": "קבלן ראשי", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}, {"id": "TAB33-003", "project": "משרדי טבולה", "floor": "קומה 33", "area": "כניסה", "room": "ארון רכזת גילוי", "desc": "השלמת תיקון גבס בתוך ארון רכזת גילוי — גבס פתוח, יש לסיים עבודות גבס", "contractor": "קבלן ראשי", "urgency": "דחוף", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}, {"id": "TAB33-004", "project": "משרדי טבולה", "floor": "קומה 33", "area": "כללי", "room": "כלל המשרד", "desc": "ניקיון גופי תאורה והפון בוטים בכל ההאדלים — אבק ולכלוך על גופי תאורה", "contractor": "קבלן ראשי", "urgency": "נמוך", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}, {"id": "TAB33-005", "project": "משרדי טבולה", "floor": "קומה 33", "area": "אדל 27", "room": "פינת קונסטרוקציה", "desc": "האדל 27 — חסר מספר: סידור פינת קונסטרוקציה שמאל, ניקיון פנים, קונסטרוקציית החלפת פנל, ניקיון גוף תאורה, התקנת פנל חיצוני + צביעת סינר פנימי בשחור (?)", "contractor": "קבלן ראשי", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}, {"id": "TAB33-006", "project": "משרדי טבולה", "floor": "קומה 33", "area": "חדר 30", "room": "קיר גבס / חלון", "desc": "תיקוני צבע על קיר גבס, חיצוני סביב משקוף דלת וסינר מעל חלון — יש לתקן צבע ולנקות אזור", "contractor": "קבלן ראשי", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}, {"id": "TAB33-007", "project": "משרדי טבולה", "floor": "קומה 33", "area": "חדר 30", "room": "חדר 30", "desc": "חדר 30 — חסרה דלת, זכוכית נדרשת לניקוי, קונסטרוקציית תקרה מצבה נדרשת לניקוי, אלומיניום שחור בחלון, תיקון צבע מתחת לחלון אלומיניום, ניקיון לבד מלכולל תיקון צבע, פנלים בתקרה החלפת ספוט, תקול בתקרה שאיבת נסורת מרגליים שולחון החלפת מתקן טושים", "contractor": "קבלן ראשי", "urgency": "דחוף", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}, {"id": "TAB33-008", "project": "משרדי טבולה", "floor": "קומה 33", "area": "חדר 30", "room": "קונסטרוקציה ליד חלון", "desc": "סגירת פרופיל תקרה על קונסטרוקציה מחוץ לחדר 30 ליד חלון — פרופיל תקרה פתוח, יש לסגור", "contractor": "קבלן ראשי", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}, {"id": "TAB33-009", "project": "משרדי טבולה", "floor": "קומה 33", "area": "אדל 29", "room": "צנרת מיזוג / סינר", "desc": "תיקוני צבע על צנרת מיזוג אוויר ועל סינר מעל האדל 29 — צבע חסר / פגום", "contractor": "קבלן ראשי", "urgency": "נמוך", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}, {"id": "TAB33-010", "project": "משרדי טבולה", "floor": "קומה 33", "area": "אדל 28", "room": "אדל 28", "desc": "האדל 28 — תיקון שפכטל וצבע על הורים מעל הדלת, משענת ספסל שמאלי לא ישרה וצמודה לקיר, סידור סף אקוסטי, כולל כיסוי פינות קונסטרוקציה, צביקת סינר מעל דלת בשחור, ניקיון גוף תאורה ואבק מגוף, ניקיון צבע מחיפוי פינות, ספסלים וסידור, לשאוב את החטא", "contractor": "קבלן ראשי", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}, {"id": "TAB33-011", "project": "משרדי טבולה", "floor": "קומה 33", "area": "אדל 27", "room": "תעלה / מדרגות", "desc": "תיקון סביב תעלה מול האדל 27 — פגמים וסדקים סביב התעלה", "contractor": "קבלן ראשי", "urgency": "דחוף", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}, {"id": "TAB33-012", "project": "משרדי טבולה", "floor": "קומה 33", "area": "אדל 27", "room": "גבס צמוד האדל", "desc": "גבס צמוד לאדל 27 — תיקון צבע פתח גישה, אישור מתז עקום, תיקון שפכטל וצבע על פינת גבס", "contractor": "קבלן ראשי", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}, {"id": "TAB33-013", "project": "משרדי טבולה", "floor": "קומה 33", "area": "כללי", "room": "תקרה / צנרת", "desc": "סגירת ריח תקרה וסידור צנרת או כבל בתעלה — צנרת/כבל חשוף בתקרה, יש לסדר ולסגור", "contractor": "קבלן ראשי", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}, {"id": "TAB33-014", "project": "משרדי טבולה", "floor": "קומה 33", "area": "מטבח / מטבחון", "room": "מטבח", "desc": "צביעת ראשי ברגים בשחור — ראשי ברגים גלויים בארון מטבח, יש לצבוע בשחור", "contractor": "קבלן ראשי", "urgency": "נמוך", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}, {"id": "TAB33-015", "project": "משרדי טבולה", "floor": "קומה 33", "area": "מטבח / מטבחון", "room": "מטבח", "desc": "ניקיון כל רגלי השולחנות מאבק — שולחנות מלוכלכים, רגליים עם אבק", "contractor": "קבלן ראשי", "urgency": "נמוך", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}, {"id": "TAB33-016", "project": "משרדי טבולה", "floor": "קומה 33", "area": "מסדרון", "room": "תקרת מסדרון", "desc": "סידור סגירת פתח תקרתי וביצוע תיקוני צבע על התקרה — פתח תקרה פתוח, סימני צבע", "contractor": "קבלן ראשי", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}, {"id": "TAB33-017", "project": "משרדי טבולה", "floor": "קומה 33", "area": "כללי", "room": "מפאנלים", "desc": "ניקיון צבע מפאנלים — כתמי צבע על פאנלים", "contractor": "קבלן ראשי", "urgency": "נמוך", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}, {"id": "TAB33-018", "project": "משרדי טבולה", "floor": "קומה 33", "area": "כניסה / מבואה", "room": "צנרת אש", "desc": "ניקיון סגידת בידוד סביב צנרת אש, צביעה ופירוק אביזרים שלא שייכים", "contractor": "קבלן ראשי", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}, {"id": "TAB33-019", "project": "משרדי טבולה", "floor": "קומה 33", "area": "מדרגות / מעבר", "room": "קונסטרוקציית מדרגות", "desc": "ניקיון קונסטרוקציית מדרגות מאבק, לכלוך וצבע", "contractor": "קבלן ראשי", "urgency": "נמוך", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}, {"id": "TAB33-020", "project": "משרדי טבולה", "floor": "קומה 33", "area": "כללי", "room": "קופסת חשמל", "desc": "סגירת קופסת חשמל וביצוע תיקוני צבע — קופסת חשמל פתוחה", "contractor": "קבלן ראשי", "urgency": "דחוף", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}, {"id": "TAB33-021", "project": "משרדי טבולה", "floor": "קומה 33", "area": "חדר 26", "room": "חדר 26", "desc": "חדר 26 — סידור סינר וגמרים לקיר מסך, סגירה בין חדרים, ניקיון קונסטרוקציית תקרה, מצבה ושפכטל ניקיון קיר מסך, ניקיון פנלים, ניקיון קיר מסך בחיבור פינת תיקון ניקיון קיר מסך ועמוד מסך", "contractor": "קבלן ראשי", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}, {"id": "TAB33-022", "project": "משרדי טבולה", "floor": "קומה 33", "area": "כניסה", "room": "שכונה כחולה", "desc": "שכונה כחולה צמוד לקיר מסך — להכניס כבילת תקשורת לתעלה", "contractor": "קבלן ראשי", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}, {"id": "TAB33-023", "project": "משרדי טבולה", "floor": "קומה 33", "area": "פון בוט 25", "room": "פון בוט 25", "desc": "פון בוט 25 — הורדת עמדת עבודה (אין נגרות) — עמדת עבודה שאינה במקום", "contractor": "קבלן ראשי", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}, {"id": "TAB33-024", "project": "משרדי טבולה", "floor": "קומה 33", "area": "אדל 24", "room": "אדל 24", "desc": "האדל 24 — ניקיון חיפוי לבד ניקיון גוף תאורה, ניקיון קונסטרוקציה שחורה בתוך הארונית, תיקון גרונג קונסטרוקציה, תיקון וקיבוע סף אקוסטי", "contractor": "קבלן ראשי", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}, {"id": "TAB33-025", "project": "משרדי טבולה", "floor": "קומה 33", "area": "חדר ארון תקשורת", "room": "חדר ארון תקשורת", "desc": "חדר מול ארון תקשורת — תיקון התקנת פאנלים מתחת לקיר מסך, כולל ניקיון, תיקון גמר על גבס בטון צמוד צמוד לתקרה ולקיר מסך", "contractor": "קבלן ראשי", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}, {"id": "TAB33-026", "project": "משרדי טבולה", "floor": "קומה 33", "area": "חדר 22", "room": "מעל חדר 22", "desc": "מעל חדר 22 — ניתוק/סידור כבל תלוי", "contractor": "קבלן ראשי", "urgency": "דחוף", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}, {"id": "TAB33-027", "project": "משרדי טבולה", "floor": "קומה 33", "area": "חדר 22", "room": "חדר 22", "desc": "חדר 22 — תיקון חיפוי לבד מימין למסך, החלפת/תיקון תליית כל אריחי התקרה, ניקיון צבע חיפוי, החלפת מסך TV, לשאוב מרכזי שולחן ישיבות", "contractor": "קבלן ראשי", "urgency": "דחוף", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}, {"id": "TAB33-028", "project": "משרדי טבולה", "floor": "קומה 33", "area": "חדר 22", "room": "קיר גבס מול חדר 22", "desc": "תיקון קיר גבס כהכנה לטפט מול חדר 22", "contractor": "קבלן ראשי", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}, {"id": "TAB33-029", "project": "משרדי טבולה", "floor": "קומה 33", "area": "אדל 21", "room": "שכונה כחולה ליד אדל 21", "desc": "שכונה כחולה צמודה לקיר מסך ליד האדל 21 — תיקון וסגירה", "contractor": "קבלן ראשי", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}, {"id": "TAB33-030", "project": "משרדי טבולה", "floor": "קומה 33", "area": "כללי", "room": "עמוד / מסך ניקיון אבק", "desc": "שכונה כחולה צמוד לקיר — מסך ניקיון אבק מקונסטרוקציית תקרה", "contractor": "קבלן ראשי", "urgency": "נמוך", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}, {"id": "TAB33-031", "project": "משרדי טבולה", "floor": "קומה 33", "area": "אדל 15", "room": "אדל 15", "desc": "האדל 15 — תיקוני גבס סביב משקוף אספקת תקרה, חיבור זכוכית חסרה, כיוון סף אקוסטי", "contractor": "קבלן ראשי", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}, {"id": "TAB33-032", "project": "משרדי טבולה", "floor": "קומה 33", "area": "אדל 14", "room": "אדל 14", "desc": "האדל 14 — סידור אריחי תקרה, השלמת עמדת חשמל ותקשורת, תיקוני צבע בחיבור קירות, ניקיון צבע מאלומיניום", "contractor": "קבלן ראשי", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}, {"id": "TAB33-033", "project": "משרדי טבולה", "floor": "קומה 33", "area": "צמוד לקיר מסל", "room": "עמדת הידרנט", "desc": "צמוד לקיר מסל מול עמדת הידרנט — סגירות ליד קיר מסך, תיקון גבס, תיקון צבע בין עמוד לקורה ותקרה", "contractor": "קבלן ראשי", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}, {"id": "TAB33-034", "project": "משרדי טבולה", "floor": "קומה 33", "area": "אדל 13", "room": "אדל 13", "desc": "האדל 13 — הדבקת פאנל ליד ספסל, סגירת אריחי תקרה", "contractor": "קבלן ראשי", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}, {"id": "TAB33-035", "project": "משרדי טבולה", "floor": "קומה 33", "area": "כללי", "room": "פינת אקוסטי", "desc": "השלמת חיפוי אקוסטי, ניקיון וסדר — חיפוי אקוסטי חסר", "contractor": "קבלן ראשי", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}, {"id": "TAB33-036", "project": "משרדי טבולה", "floor": "קומה 33", "area": "שכונה צהובה ליד חדר 4", "room": "שכונה צהובה", "desc": "שכונה צהובה ליד חדר 4 — תיקון גמר שפכטל וצבע והכנסת כבילה לצנרת", "contractor": "קבלן ראשי", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}, {"id": "TAB33-037", "project": "משרדי טבולה", "floor": "קומה 33", "area": "כניסה צפונית", "room": "תעלת חשמל צפון", "desc": "שכונה צפונית סגירת תעלת חשמל — תעלת חשמל פתוחה בצפון", "contractor": "קבלן ראשי", "urgency": "דחוף", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}, {"id": "TAB33-038", "project": "משרדי טבולה", "floor": "קומה 33", "area": "אדל 5", "room": "אדל 5", "desc": "האדל 5 — החלפת שטיחים עם תיקון צבע חיבור קונסטרוקציית תקרה הדבקת זכולחן + השלמת מכסה כבילה", "contractor": "קבלן ראשי", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}, {"id": "TAB33-039", "project": "משרדי טבולה", "floor": "קומה 33", "area": "אדל 6", "room": "אדל 6", "desc": "האדל 6 — תיקון סף אקוסטי, ניקיון צבע מאלומיניום, סידור פינות קונסטרוקציית תקרה, ניקיון גוף תאורה, ניקיון משטח זכוכית מצבע", "contractor": "קבלן ראשי", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}, {"id": "TAB33-040", "project": "משרדי טבולה", "floor": "קומה 33", "area": "אדל 7", "room": "אדל 7", "desc": "האדל 7 — תיקון סגירת פינות קונסטרוקציית תקרה, הדבקה זמנית למשטח זכוכית (דרא להחליף), ניקיון צבע מאלומיניום", "contractor": "קבלן ראשי", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}, {"id": "TAB33-041", "project": "משרדי טבולה", "floor": "קומה 33", "area": "כניסה צפונית", "room": "תעלת חשמל", "desc": "שכונה צפונית סגירת תעלת חשמל", "contractor": "קבלן ראשי", "urgency": "דחוף", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}, {"id": "TAB33-042", "project": "משרדי טבולה", "floor": "קומה 33", "area": "פינה מערבית דרום", "room": "פינה מערבית-דרום", "desc": "תיקוני שפכטל וצבע וגמר — דרום מערב — פינה מערבית גמר, תיקון גבס וצבע", "contractor": "קבלן ראשי", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}, {"id": "TAB33-043", "project": "משרדי טבולה", "floor": "קומה 33", "area": "חדר 2", "room": "מאחורי חדר 2", "desc": "מאחורי חדר 2 — תיקוני צבע", "contractor": "קבלן ראשי", "urgency": "נמוך", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}, {"id": "TAB33-044", "project": "משרדי טבולה", "floor": "קומה 33", "area": "חדר 1", "room": "מאחורי חדר 1", "desc": "תיקוני צבע גמר — מאחורי חדר 1 — צנרת תקרה, גבס וצבע פגום", "contractor": "קבלן ראשי", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}, {"id": "TAB33-045", "project": "משרדי טבולה", "floor": "קומה 33", "area": "כללי", "room": "קופינג", "desc": "השלמת קופינג נגרות — קופינג חסר / לא הושלם", "contractor": "קבלן ראשי", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}, {"id": "TAB33-046", "project": "משרדי טבולה", "floor": "קומה 33", "area": "כללי", "room": "אדל 6 / תקרה", "desc": "סגירה ותיקון מול האדל 6 — פתיחה בתקרה ליד אדל 6", "contractor": "קבלן ראשי", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}, {"id": "TAB33-047", "project": "משרדי טבולה", "floor": "קומה 33", "area": "פינה מערבית-צפון", "room": "פינה מערבית-צפון", "desc": "פינה צפון מערבית — תיקוני גמר, גבס, וצבע", "contractor": "קבלן ראשי", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}, {"id": "TAB33-048", "project": "משרדי טבולה", "floor": "קומה 33", "area": "אדל 8", "room": "אדל 8", "desc": "האדל 8 — החלפת אריח לבד מול דלתסגירה מעל אלומיניום, ניקיון רצפה", "contractor": "קבלן ראשי", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}, {"id": "TAB33-049", "project": "משרדי טבולה", "floor": "קומה 33", "area": "אדל 9", "room": "אדל 9", "desc": "האדל 9 — שיפור גמר מחיצת גבס משמאל, סגירת גרונג בתקרה, ניקיון מחזיר שמן מאבק", "contractor": "קבלן ראשי", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}, {"id": "TAB33-050", "project": "משרדי טבולה", "floor": "קומה 33", "area": "חדר 3", "room": "חדר 3", "desc": "חדר 3 — ניקיון או החלפת חיפוי לבד, תיקון גמר חיפוי לבד, יישור אריחי תקרה, התקנת סטופר לדלת, צביעת ה-קופסא כתומה, השלמת דלת כניסה וסטופר, כיוון מחזיר שמן לסגירת דלת", "contractor": "קבלן ראשי", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}, {"id": "TAB33-051", "project": "משרדי טבולה", "floor": "קומה 33", "area": "חדר 2", "room": "חדר 2", "desc": "חדר 2 — ניקיון או החלפת חיפוי לבד מלוכלך, תיקון שפכטל וצבע ליד ספוט, תאורה יישור אריחי תקרה, הצמדת תרמוסטט או צביעת קופסה כתומה, השלמת דלת כניסה וסטופר", "contractor": "קבלן ראשי", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}, {"id": "TAB33-052", "project": "משרדי טבולה", "floor": "קומה 33", "area": "חדר 4", "room": "חדר 4", "desc": "חדר 4 — ניקיון ותיקון התקנת חיפוי לבד, יישור תקרה, התקנת סטופר לדלת, צבע לקופסא או תיקון תרמוסטט מאחורי", "contractor": "קבלן ראשי", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}, {"id": "TAB33-053", "project": "משרדי טבולה", "floor": "קומה 33", "area": "כללי", "room": "ארון חשמל נישה", "desc": "ניקיון והשלמת גמר נישת ארון חשמל", "contractor": "קבלן ראשי", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}, {"id": "TAB33-054", "project": "משרדי טבולה", "floor": "קומה 33", "area": "מטבח", "room": "מטבח", "desc": "מטבחון — תיקון שפכטל וצבע ליד כניסה, צביעת ראשי ברגים בשחור", "contractor": "קבלן ראשי", "urgency": "נמוך", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}, {"id": "TAB33-055", "project": "משרדי טבולה", "floor": "קומה 33", "area": "חדר 1", "room": "חדר 1", "desc": "חדר 1 — ניקיון או החלפת חיפוי, תיקוני צבע סידור תרמוסטט והצמדה לקיר, או צביעה בשחור, ניקיון צבע מאלומיניום", "contractor": "קבלן ראשי", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}, {"id": "TAB33-056", "project": "משרדי טבולה", "floor": "קומה 33", "area": "שכונה צפונית", "room": "פאנל מעל שכונה", "desc": "שכונה צפונית תיקון גמר מעל פאנל", "contractor": "קבלן ראשי", "urgency": "נמוך", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}, {"id": "TAB33-057", "project": "משרדי טבולה", "floor": "קומה 33", "area": "כללי", "room": "ארון מדפסות", "desc": "ניקיון ארון מדפסות והשלמת תיקוני שפכטל וצבע", "contractor": "קבלן ראשי", "urgency": "נמוך", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}, {"id": "TAB33-058", "project": "משרדי טבולה", "floor": "קומה 33", "area": "חדר 4", "room": "אריח תקרה ליד סינר", "desc": "תיקון צבע וחיבור אריחי תקרה לסינר — מאחורי חדר 4", "contractor": "קבלן ראשי", "urgency": "נמוך", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}, {"id": "TAB33-059", "project": "משרדי טבולה", "floor": "קומה 33", "area": "פינה מערבית-דרום", "room": "דרום-מערב", "desc": "תיקוני שפכטל וצבע וגמר — פינה דרום מערב", "contractor": "קבלן ראשי", "urgency": "רגיל", "status": "נשלח לטיפול", "created": "2026-03-29", "photos": [], "log": [{"date": "2026-03-29T00:00:00", "by": "רועי", "from": "-", "to": "נשלח לטיפול", "note": "ייבוא מדוח סיור"}]}];
-let currentFilter = 'all';
+const DEFECTS = [
+  // ── עמוד 1 ──
+  {
+    id:"Q33-001", project:"משרדי טבולה", floor:"33",
+    area:"כניסה", room:"דלת כניסה",
+    desc:"התקנת מערכת בקרת כניסה — חיווט גלוי, יש להשלים התקנה ולהסתיר כבלים",
+    category:"חשמל ותקשורת", contractor:"קבלן ראשי", urgency:"גבוה",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
+  {
+    id:"Q33-002", project:"משרדי טבולה", floor:"33",
+    area:"כניסה", room:"ארון חשמל",
+    desc:"השלמת פנל ליד ארון חשמל — יש להשלים התקנה ולסדר האזור",
+    category:"חשמל ותקשורת", contractor:"קבלן ראשי", urgency:"בינוני",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
+  {
+    id:"Q33-003", project:"משרדי טבולה", floor:"33",
+    area:"כניסה", room:"ארון רכזת גילוי אש",
+    desc:"השלמת תיקון גבס בתוך ארון רכזת גילוי — גבס פתוח, יש לסיים עבודות גבס וצבע",
+    category:"גבס וצבע", contractor:"קבלן ראשי", urgency:"גבוה",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
+  {
+    id:"Q33-004", project:"משרדי טבולה", floor:"33",
+    area:"כללי", room:"כלל הקומה",
+    desc:"ניקיון גופי תאורה והפון בוטים בכל ההאדלים — אבק ולכלוך על גופי תאורה",
+    category:"ניקיון וסיום", contractor:"קבלן ראשי", urgency:"נמוך",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
 
-function renderList() {
-  const filtered = currentFilter === 'all' ? DATA : DATA.filter(d => d.floor && d.floor.includes(currentFilter));
-  const list = document.getElementById('list');
-  list.innerHTML = filtered.map(d => {
-    const isNew = d.floor === 'קומה 33';
-    return `<div class="defect-row">
-      <div class="dr-num">${d.id}</div>
-      <div class="dr-content">
-        <div class="dr-floor">${isNew ? '<span class="new-badge">חדש</span>' : ''}<span>${d.floor}</span></div>
-        <div class="dr-room">📍 ${d.room || '—'}</div>
-        <div class="dr-desc">${d.desc}</div>
-      </div>
-      <div class="dr-check"><input type="checkbox" id="chk-${d.id}" checked onchange="updateCount()"></div>
-    </div>`;
-  }).join('');
-  updateCount();
-}
+  // ── עמוד 2 ──
+  {
+    id:"Q33-005", project:"משרדי טבולה", floor:"33",
+    area:"האדל 27", room:"האדל 27",
+    desc:"האדל 27 — סידור פינת קונסטרוקציה שמאל, ניקיון פנים, החלפת פנל קונסטרוקציה, ניקיון גוף תאורה, התקנת פנל חיצוני, צביעת סינר פנימי בשחור",
+    category:"קונסטרוקציה ותקרה", contractor:"קבלן ראשי", urgency:"בינוני",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
+  {
+    id:"Q33-006", project:"משרדי טבולה", floor:"33",
+    area:"חדר 30", room:"חדר 30",
+    desc:"חדר 30 — חסרה דלת, זכוכית לניקוי, קונסטרוקציית תקרה לניקוי, אלומיניום שחור בחלון, תיקון צבע מתחת לחלון, ניקיון חיפוי לבד, תיקון צבע, פנלים בתקרה, החלפת ספוט תקול, שאיבת נסורת מרגליים, החלפת מתקן טושים",
+    category:"גבס וצבע", contractor:"קבלן ראשי", urgency:"גבוה",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
+  {
+    id:"Q33-007", project:"משרדי טבולה", floor:"33",
+    area:"חדר 30", room:"קיר גבס / חלון",
+    desc:"תיקוני צבע על קיר גבס, חיצוני סביב משקוף דלת וסינר מעל חלון",
+    category:"גבס וצבע", contractor:"קבלן ראשי", urgency:"בינוני",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
+  {
+    id:"Q33-008", project:"משרדי טבולה", floor:"33",
+    area:"חדר 30", room:"קונסטרוקציה ליד חלון",
+    desc:"סגירת פרופיל תקרה על קונסטרוקציה מחוץ לחדר 30 ליד חלון",
+    category:"קונסטרוקציה ותקרה", contractor:"קבלן ראשי", urgency:"בינוני",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
+  {
+    id:"Q33-009", project:"משרדי טבולה", floor:"33",
+    area:"האדל 29", room:"האדל 29",
+    desc:"תיקוני צבע על צנרת מיזוג אוויר ועל סינר מעל האדל 29",
+    category:"גבס וצבע", contractor:"קבלן ראשי", urgency:"נמוך",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
 
-function filterFloor(f, el) {
-  currentFilter = f;
-  document.querySelectorAll('.fb').forEach(b => b.classList.remove('on'));
-  el.classList.add('on');
-  renderList();
-}
+  // ── עמוד 3 ──
+  {
+    id:"Q33-010", project:"משרדי טבולה", floor:"33",
+    area:"האדל 28", room:"האדל 28",
+    desc:"האדל 28 — תיקון שפכטל וצבע על הורים מעל הדלת, משענת ספסל שמאלי לא ישרה וצמודה לקיר, סידור סף אקוסטי, כיסוי פינות קונסטרוקציה, צביעת סינר מעל דלת בשחור, ניקיון גוף תאורה, ניקיון צבע מחיפוי, שאיבת שטיח",
+    category:"קונסטרוקציה ותקרה", contractor:"קבלן ראשי", urgency:"בינוני",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
+  {
+    id:"Q33-011", project:"משרדי טבולה", floor:"33",
+    area:"האדל 27", room:"תעלה מול האדל 27",
+    desc:"תיקון סביב תעלה מול האדל 27 — פגמים וסדקים סביב התעלה",
+    category:"גבס וצבע", contractor:"קבלן ראשי", urgency:"גבוה",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
+  {
+    id:"Q33-012", project:"משרדי טבולה", floor:"33",
+    area:"האדל 27", room:"גבס צמוד האדל 27",
+    desc:"גבס צמוד לאדל 27 — תיקון צבע פתח גישה, אישור מתז עקום, תיקון שפכטל וצבע על פינת גבס",
+    category:"גבס וצבע", contractor:"קבלן ראשי", urgency:"בינוני",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
+  {
+    id:"Q33-013", project:"משרדי טבולה", floor:"33",
+    area:"כללי", room:"תקרה / תעלה",
+    desc:"סגירת ריח תקרה וסידור צנרת/כבל בתעלה — כבל חשוף בתקרה, יש לסדר ולסגור",
+    category:"חשמל ותקשורת", contractor:"קבלן ראשי", urgency:"בינוני",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
 
-function selAll(val) {
-  document.querySelectorAll('input[type=checkbox]').forEach(c => c.checked = val);
-  updateCount();
-}
+  // ── עמוד 4 ──
+  {
+    id:"Q33-014", project:"משרדי טבולה", floor:"33",
+    area:"מטבח", room:"מטבח",
+    desc:"צביעת ראשי ברגים בשחור — ראשי ברגים גלויים בארון מטבח",
+    category:"נגרות ומטבח", contractor:"קבלן ראשי", urgency:"נמוך",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
+  {
+    id:"Q33-015", project:"משרדי טבולה", floor:"33",
+    area:"מטבח", room:"מטבח",
+    desc:"ניקיון כל רגלי השולחנות מאבק",
+    category:"ניקיון וסיום", contractor:"קבלן ראשי", urgency:"נמוך",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
+  {
+    id:"Q33-016", project:"משרדי טבולה", floor:"33",
+    area:"מסדרון", room:"תקרת מסדרון",
+    desc:"סידור סגירת פתח תקרתי וביצוע תיקוני צבע על התקרה",
+    category:"קונסטרוקציה ותקרה", contractor:"קבלן ראשי", urgency:"בינוני",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
+  {
+    id:"Q33-017", project:"משרדי טבולה", floor:"33",
+    area:"כללי", room:"פאנלים",
+    desc:"ניקיון צבע מפאנלים — כתמי צבע על פאנלים",
+    category:"ניקיון וסיום", contractor:"קבלן ראשי", urgency:"נמוך",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
 
-function updateCount() {
-  const n = document.querySelectorAll('input[type=checkbox]:checked').length;
-  document.getElementById('selCount').textContent = n;
-  document.getElementById('selLabel').textContent = n + ' ליקויים נבחרו';
-}
+  // ── עמוד 5 ──
+  {
+    id:"Q33-018", project:"משרדי טבולה", floor:"33",
+    area:"כניסה / מבואה", room:"צנרת אש",
+    desc:"ניקיון סגידת בידוד סביב צנרת אש, צביעה ופירוק אביזרים שלא שייכים",
+    category:"אינסטלציה ואש", contractor:"קבלן ראשי", urgency:"בינוני",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
+  {
+    id:"Q33-019", project:"משרדי טבולה", floor:"33",
+    area:"מדרגות / מעבר", room:"קונסטרוקציית מדרגות",
+    desc:"ניקיון קונסטרוקציית מדרגות מאבק, לכלוך וצבע",
+    category:"ניקיון וסיום", contractor:"קבלן ראשי", urgency:"נמוך",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
+  {
+    id:"Q33-020", project:"משרדי טבולה", floor:"33",
+    area:"כללי", room:"קופסת חשמל",
+    desc:"סגירת קופסת חשמל וביצוע תיקוני צבע — קופסת חשמל פתוחה",
+    category:"חשמל ותקשורת", contractor:"קבלן ראשי", urgency:"גבוה",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
+  {
+    id:"Q33-021", project:"משרדי טבולה", floor:"33",
+    area:"חדר 26", room:"חדר 26",
+    desc:"חדר 26 — סידור סינר וגמרים לקיר מסך, סגירה בין חדרים, ניקיון קונסטרוקציית תקרה, שפכטל ניקיון קיר מסך, ניקיון פנלים, תיקון פינת חיבור קיר מסך ועמוד מסך",
+    category:"קונסטרוקציה ותקרה", contractor:"קבלן ראשי", urgency:"בינוני",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
 
-function importSelected() {
-  const selected = DATA.filter(d => {
-    const el = document.getElementById('chk-' + d.id);
-    return el && el.checked;
+  // ── עמוד 6 ──
+  {
+    id:"Q33-022", project:"משרדי טבולה", floor:"33",
+    area:"שכונה כחולה", room:"ליד קיר מסך",
+    desc:"שכונה כחולה צמוד לקיר מסך — להכניס כבילת תקשורת לתעלה",
+    category:"חשמל ותקשורת", contractor:"קבלן ראשי", urgency:"בינוני",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
+  {
+    id:"Q33-023", project:"משרדי טבולה", floor:"33",
+    area:"פון בוט 25", room:"פון בוט 25",
+    desc:"פון בוט 25 — הורדת עמדת עבודה (אין נגרות)",
+    category:"נגרות ומטבח", contractor:"קבלן ראשי", urgency:"בינוני",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
+  {
+    id:"Q33-024", project:"משרדי טבולה", floor:"33",
+    area:"האדל 24", room:"האדל 24",
+    desc:"האדל 24 — ניקיון חיפוי לבד, ניקיון גוף תאורה, ניקיון קונסטרוקציה שחורה בתוך הארונית, תיקון גרונג קונסטרוקציה, תיקון וקיבוע סף אקוסטי",
+    category:"קונסטרוקציה ותקרה", contractor:"קבלן ראשי", urgency:"בינוני",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
+
+  // ── עמוד 7 ──
+  {
+    id:"Q33-025", project:"משרדי טבולה", floor:"33",
+    area:"חדר ארון תקשורת", room:"מול ארון תקשורת",
+    desc:"חדר מול ארון תקשורת — תיקון התקנת פאנלים מתחת לקיר מסך, ניקיון, תיקון גמר גבס בטון צמוד לתקרה ולקיר מסך",
+    category:"גבס וצבע", contractor:"קבלן ראשי", urgency:"בינוני",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
+  {
+    id:"Q33-026", project:"משרדי טבולה", floor:"33",
+    area:"חדר 22", room:"מעל חדר 22",
+    desc:"מעל חדר 22 — ניתוק/סידור כבל תלוי",
+    category:"חשמל ותקשורת", contractor:"קבלן ראשי", urgency:"גבוה",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
+  {
+    id:"Q33-027", project:"משרדי טבולה", floor:"33",
+    area:"חדר 22", room:"חדר 22",
+    desc:"חדר 22 — תיקון חיפוי לבד מימין למסך, החלפת/תיקון תליית כל אריחי התקרה, ניקיון צבע חיפוי, החלפת מסך TV, שאיבת מרכז שולחן ישיבות",
+    category:"קונסטרוקציה ותקרה", contractor:"קבלן ראשי", urgency:"גבוה",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
+  {
+    id:"Q33-028", project:"משרדי טבולה", floor:"33",
+    area:"חדר 22", room:"קיר גבס מול חדר 22",
+    desc:"תיקון קיר גבס כהכנה לטפט מול חדר 22",
+    category:"גבס וצבע", contractor:"קבלן ראשי", urgency:"בינוני",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
+  {
+    id:"Q33-029", project:"משרדי טבולה", floor:"33",
+    area:"חדר 22", room:"תיקון צבע קיר לסינר",
+    desc:"תיקון צבע בין קיר לסינר בתקרה — חדר 22",
+    category:"גבס וצבע", contractor:"קבלן ראשי", urgency:"בינוני",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
+
+  // ── עמוד 8 ──
+  {
+    id:"Q33-030", project:"משרדי טבולה", floor:"33",
+    area:"שכונה כחולה", room:"ליד האדל 21",
+    desc:"שכונה כחולה ליד האדל 21 — תיקון וסגירה ליד קיר מסך",
+    category:"חשמל ותקשורת", contractor:"קבלן ראשי", urgency:"בינוני",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
+  {
+    id:"Q33-031", project:"משרדי טבולה", floor:"33",
+    area:"כללי", room:"תקרה מול קיר מסך",
+    desc:"ניקיון אבק מקונסטרוקציית תקרה ליד עמוד קיר מסך",
+    category:"ניקיון וסיום", contractor:"קבלן ראשי", urgency:"נמוך",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
+  {
+    id:"Q33-032", project:"משרדי טבולה", floor:"33",
+    area:"האדל 15", room:"האדל 15",
+    desc:"האדל 15 — תיקוני גבס סביב משקוף אספקת תקרה, חיבור זכוכית חסרה, כיוון סף אקוסטי",
+    category:"קונסטרוקציה ותקרה", contractor:"קבלן ראשי", urgency:"בינוני",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
+  {
+    id:"Q33-033", project:"משרדי טבולה", floor:"33",
+    area:"האדל 14", room:"האדל 14",
+    desc:"האדל 14 — סידור אריחי תקרה, השלמת עמדת חשמל ותקשורת, תיקוני צבע בחיבור קירות, ניקיון צבע מאלומיניום",
+    category:"קונסטרוקציה ותקרה", contractor:"קבלן ראשי", urgency:"בינוני",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
+
+  // ── עמוד 9 ──
+  {
+    id:"Q33-034", project:"משרדי טבולה", floor:"33",
+    area:"עמדת הידרנט", room:"צמוד לקיר מסל",
+    desc:"צמוד לקיר מסל מול עמדת הידרנט — סגירות ליד קיר מסך, תיקון גבס, תיקון צבע בין עמוד לקורה ותקרה",
+    category:"גבס וצבע", contractor:"קבלן ראשי", urgency:"בינוני",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
+  {
+    id:"Q33-035", project:"משרדי טבולה", floor:"33",
+    area:"כללי", room:"פינת אקוסטי",
+    desc:"השלמת חיפוי אקוסטי, ניקיון וסדר",
+    category:"קונסטרוקציה ותקרה", contractor:"קבלן ראשי", urgency:"בינוני",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
+  {
+    id:"Q33-036", project:"משרדי טבולה", floor:"33",
+    area:"האדל 13", room:"האדל 13",
+    desc:"האדל 13 — הדבקת פאנל ליד ספסל, סגירת אריחי תקרה",
+    category:"קונסטרוקציה ותקרה", contractor:"קבלן ראשי", urgency:"בינוני",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
+  {
+    id:"Q33-037", project:"משרדי טבולה", floor:"33",
+    area:"עמדת הידרנט", room:"צמוד לקיר מסל — הידרנט",
+    desc:"צמוד לקיר מסל מול עמדת הידרנט — סגירת גרונג בתקרה, תיקון גבס וצבע בין עמוד לקורה",
+    category:"אינסטלציה ואש", contractor:"קבלן ראשי", urgency:"בינוני",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
+  {
+    id:"Q33-038", project:"משרדי טבולה", floor:"33",
+    area:"שכונה צהובה", room:"ליד חדר 4",
+    desc:"שכונה צהובה ליד חדר 4 — תיקון גמר שפכטל וצבע, הכנסת כבילה לצנרת",
+    category:"חשמל ותקשורת", contractor:"קבלן ראשי", urgency:"בינוני",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
+
+  // ── עמוד 10 ──
+  {
+    id:"Q33-039", project:"משרדי טבולה", floor:"33",
+    area:"כניסה צפונית", room:"תעלת חשמל צפון",
+    desc:"שכונה צפונית — סגירת תעלת חשמל פתוחה בצפון",
+    category:"חשמל ותקשורת", contractor:"קבלן ראשי", urgency:"גבוה",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
+  {
+    id:"Q33-040", project:"משרדי טבולה", floor:"33",
+    area:"חדר 4", room:"אריחי תקרה מאחורי חדר 4",
+    desc:"תיקון צבע וחיבור אריחי תקרה לסינר — מאחורי חדר 4",
+    category:"קונסטרוקציה ותקרה", contractor:"קבלן ראשי", urgency:"נמוך",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
+  {
+    id:"Q33-041", project:"משרדי טבולה", floor:"33",
+    area:"פינה דרום-מערב", room:"דרום-מערב",
+    desc:"תיקוני שפכטל וצבע וגמר — פינה דרום מערב",
+    category:"גבס וצבע", contractor:"קבלן ראשי", urgency:"בינוני",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
+  {
+    id:"Q33-042", project:"משרדי טבולה", floor:"33",
+    area:"חדר 2", room:"מאחורי חדר 2",
+    desc:"תיקוני צבע — מאחורי חדר 2",
+    category:"גבס וצבע", contractor:"קבלן ראשי", urgency:"נמוך",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
+
+  // ── עמוד 11 ──
+  {
+    id:"Q33-043", project:"משרדי טבולה", floor:"33",
+    area:"חדר 1", room:"מאחורי חדר 1",
+    desc:"תיקוני גמר — מאחורי חדר 1 — צנרת תקרה, גבס וצבע פגום",
+    category:"גבס וצבע", contractor:"קבלן ראשי", urgency:"בינוני",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
+  {
+    id:"Q33-044", project:"משרדי טבולה", floor:"33",
+    area:"כללי", room:"קופינג נגרות",
+    desc:"השלמת קופינג נגרות — קופינג חסר / לא הושלם",
+    category:"נגרות ומטבח", contractor:"קבלן ראשי", urgency:"בינוני",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
+  {
+    id:"Q33-045", project:"משרדי טבולה", floor:"33",
+    area:"האדל 6", room:"תקרה מול האדל 6",
+    desc:"סגירה ותיקון מול האדל 6 — פתיחה בתקרה",
+    category:"קונסטרוקציה ותקרה", contractor:"קבלן ראשי", urgency:"בינוני",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
+  {
+    id:"Q33-046", project:"משרדי טבולה", floor:"33",
+    area:"פינה צפון-מערבית", room:"פינה צפון-מערבית",
+    desc:"פינה צפון מערבית — תיקוני גמר, תקרה, גבס וצבע",
+    category:"גבס וצבע", contractor:"קבלן ראשי", urgency:"בינוני",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
+
+  // ── עמוד 12 ──
+  {
+    id:"Q33-047", project:"משרדי טבולה", floor:"33",
+    area:"האדל 5", room:"האדל 5",
+    desc:"האדל 5 — החלפת שטיחים עם תיקון צבע חיבור קונסטרוקציית תקרה, הדבקת זכוכית, השלמת מכסה כבילה",
+    category:"קונסטרוקציה ותקרה", contractor:"קבלן ראשי", urgency:"בינוני",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
+  {
+    id:"Q33-048", project:"משרדי טבולה", floor:"33",
+    area:"האדל 6", room:"האדל 6",
+    desc:"האדל 6 — תיקון סף אקוסטי, ניקיון צבע מאלומיניום, סידור פינות קונסטרוקציית תקרה, ניקיון גוף תאורה, ניקיון משטח זכוכית מצבע",
+    category:"קונסטרוקציה ותקרה", contractor:"קבלן ראשי", urgency:"בינוני",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
+  {
+    id:"Q33-049", project:"משרדי טבולה", floor:"33",
+    area:"האדל 7", room:"האדל 7",
+    desc:"האדל 7 — תיקון סגירת פינות קונסטרוקציית תקרה, הדבקה זמנית למשטח זכוכית (לאחר מכן להחליף), ניקיון צבע מאלומיניום",
+    category:"קונסטרוקציה ותקרה", contractor:"קבלן ראשי", urgency:"בינוני",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
+  {
+    id:"Q33-050", project:"משרדי טבולה", floor:"33",
+    area:"כניסה צפונית", room:"תעלת חשמל צפונית",
+    desc:"שכונה צפונית — סגירת תעלת חשמל פתוחה",
+    category:"חשמל ותקשורת", contractor:"קבלן ראשי", urgency:"גבוה",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
+
+  // ── עמוד 13 ──
+  {
+    id:"Q33-051", project:"משרדי טבולה", floor:"33",
+    area:"מטבח", room:"מטבחון",
+    desc:"מטבחון — תיקון שפכטל וצבע ליד כניסה, צביעת ראשי ברגים בשחור",
+    category:"נגרות ומטבח", contractor:"קבלן ראשי", urgency:"נמוך",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
+  {
+    id:"Q33-052", project:"משרדי טבולה", floor:"33",
+    area:"חדר 1", room:"חדר 1",
+    desc:"חדר 1 — ניקיון או החלפת חיפוי, תיקוני צבע, סידור תרמוסטט והצמדה לקיר או צביעה בשחור, ניקיון צבע מאלומיניום",
+    category:"גבס וצבע", contractor:"קבלן ראשי", urgency:"בינוני",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
+  {
+    id:"Q33-053", project:"משרדי טבולה", floor:"33",
+    area:"שכונה צפונית", room:"פאנל מעל שכונה",
+    desc:"שכונה צפונית — תיקון גמר מעל פאנל",
+    category:"קונסטרוקציה ותקרה", contractor:"קבלן ראשי", urgency:"נמוך",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
+  {
+    id:"Q33-054", project:"משרדי טבולה", floor:"33",
+    area:"כללי", room:"ארון מדפסות",
+    desc:"ניקיון ארון מדפסות והשלמת תיקוני שפכטל וצבע",
+    category:"ניקיון וסיום", contractor:"קבלן ראשי", urgency:"נמוך",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
+
+  // ── עמוד 14 ──
+  {
+    id:"Q33-055", project:"משרדי טבולה", floor:"33",
+    area:"חדר 3", room:"חדר 3",
+    desc:"חדר 3 — ניקיון או החלפת חיפוי לבד, תיקון גמר חיפוי, יישור אריחי תקרה, התקנת סטופר לדלת, צביעת קופסה כתומה, השלמת דלת כניסה וסטופר, כיוון מחזיר שמן לסגירת דלת",
+    category:"נגרות ומטבח", contractor:"קבלן ראשי", urgency:"בינוני",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
+  {
+    id:"Q33-056", project:"משרדי טבולה", floor:"33",
+    area:"חדר 3", room:"הדבקת פאנלים מאחורי דלת — חדר 3",
+    desc:"הדבקת פאנלים על קיר מאחורי דלת — חדר 3",
+    category:"קונסטרוקציה ותקרה", contractor:"קבלן ראשי", urgency:"בינוני",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
+  {
+    id:"Q33-057", project:"משרדי טבולה", floor:"33",
+    area:"האדל 8", room:"האדל 8",
+    desc:"האדל 8 — החלפת אריח לבד מול דלת, סגירה מעל אלומיניום, ניקיון רצפה",
+    category:"קונסטרוקציה ותקרה", contractor:"קבלן ראשי", urgency:"בינוני",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
+  {
+    id:"Q33-058", project:"משרדי טבולה", floor:"33",
+    area:"האדל 9", room:"האדל 9",
+    desc:"האדל 9 — שיפור גמר מחיצת גבס משמאל, סגירת גרונג בתקרה, ניקיון מחזיר שמן מאבק",
+    category:"קונסטרוקציה ותקרה", contractor:"קבלן ראשי", urgency:"בינוני",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
+
+  // ── עמוד 15 ──
+  {
+    id:"Q33-059", project:"משרדי טבולה", floor:"33",
+    area:"חדר 2", room:"חדר 2",
+    desc:"חדר 2 — ניקיון או החלפת חיפוי לבד, תיקון שפכטל וצבע ליד ספוט, יישור אריחי תקרה, הצמדת תרמוסטט או צביעת קופסה כתומה, השלמת דלת כניסה וסטופר",
+    category:"גבס וצבע", contractor:"קבלן ראשי", urgency:"בינוני",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
+  {
+    id:"Q33-060", project:"משרדי טבולה", floor:"33",
+    area:"חדר 4", room:"חדר 4",
+    desc:"חדר 4 — ניקיון ותיקון התקנת חיפוי לבד, יישור תקרה, התקנת סטופר לדלת, צבע לקופסה או תיקון תרמוסטט מאחורי",
+    category:"גבס וצבע", contractor:"קבלן ראשי", urgency:"בינוני",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  },
+  {
+    id:"Q33-061", project:"משרדי טבולה", floor:"33",
+    area:"כללי", room:"נישת ארון חשמל",
+    desc:"ניקיון והשלמת גמר נישת ארון חשמל",
+    category:"חשמל ותקשורת", contractor:"קבלן ראשי", urgency:"בינוני",
+    status:"נשלח לטיפול", created:"2026-03-15", deadline:"", photos:[], log:[]
+  }
+];
+
+// ── Render table ──
+window.addEventListener("DOMContentLoaded", () => {
+  const urgCount = { גבוה:0, בינוני:0, נמוך:0 };
+  DEFECTS.forEach(d => urgCount[d.urgency]++);
+
+  document.getElementById("statTotal").textContent = DEFECTS.length;
+  document.getElementById("statHigh").textContent  = urgCount["גבוה"];
+  document.getElementById("statMid").textContent   = urgCount["בינוני"];
+  document.getElementById("statLow").textContent   = urgCount["נמוך"];
+
+  const tbody = document.getElementById("tbody");
+  DEFECTS.forEach((d, i) => {
+    const cls = d.urgency === "גבוה" ? "badge-high" : d.urgency === "בינוני" ? "badge-mid" : "badge-low";
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td style="color:#94a3b8;font-size:11px">${i+1}</td>
+      <td style="font-family:monospace;font-size:12px;white-space:nowrap">${d.id}</td>
+      <td>${d.area}</td>
+      <td>${d.room}</td>
+      <td style="max-width:300px;font-size:12px;line-height:1.5">${d.desc}</td>
+      <td style="font-size:12px;white-space:nowrap">${d.category}</td>
+      <td><span class="badge ${cls}">${d.urgency}</span></td>
+      <td style="font-size:12px;color:#64748b">${d.status}</td>
+    `;
+    tbody.appendChild(tr);
   });
-  if (!selected.length) { showToast('❗ לא נבחרו ליקויים', '#ef4444'); return; }
+});
+
+// ── Import to localStorage (merge with existing pl_d) ──
+function importToApp() {
   try {
-    let existing = [];
-    try { existing = JSON.parse(localStorage.getItem('pl_d') || '[]'); } catch(e) {}
+    const existing = JSON.parse(localStorage.getItem("pl_d") || "[]");
     const existingIds = new Set(existing.map(d => d.id));
-    const toAdd = selected.filter(d => !existingIds.has(d.id));
-    const merged = [...existing, ...toAdd];
-    localStorage.setItem('pl_d', JSON.stringify(merged));
-    let projs = [];
-    try { projs = JSON.parse(localStorage.getItem('pl_p') || '[]'); } catch(e) {}
-    if (!projs.includes('משרדי טבולה')) { projs.push('משרדי טבולה'); localStorage.setItem('pl_p', JSON.stringify(projs)); }
-    showToast('✅ ' + toAdd.length + ' ליקויים יובאו!');
-    setTimeout(() => { window.location.href = 'index.html'; }, 1800);
+    const newItems = DEFECTS.filter(d => !existingIds.has(d.id));
+
+    if (newItems.length === 0) {
+      showMsg("⚠️ כל הליקויים כבר קיימים באפליקציה — לא נוספו רשומות חדשות.", "err");
+      return;
+    }
+
+    const merged = [...existing, ...newItems];
+    localStorage.setItem("pl_d", JSON.stringify(merged));
+    showMsg(`✅ יובאו בהצלחה ${newItems.length} ליקויים חדשים! סה״כ באפליקציה: ${merged.length} ליקויים. כעת עבור לאפליקציה.`, "ok");
   } catch(e) {
-    showToast('❌ שגיאה: ' + e.message, '#ef4444');
+    showMsg("❌ שגיאה בייבוא: " + e.message, "err");
   }
 }
 
-function showToast(msg, bg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.style.background = bg || '#22c55e';
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2200);
+// ── Download JSON ──
+function downloadJSON() {
+  const blob = new Blob([JSON.stringify(DEFECTS, null, 2)], { type:"application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "taboola_floor33_Q33.json";
+  a.click();
+  URL.revokeObjectURL(url);
 }
 
-renderList();
+function showMsg(text, type) {
+  const el = document.getElementById("msg");
+  el.textContent = text;
+  el.className = "msg " + type;
+  el.style.display = "block";
+  setTimeout(() => el.style.display = "none", 7000);
+}
 </script>
 </body>
 </html>
